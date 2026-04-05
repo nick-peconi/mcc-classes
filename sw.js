@@ -1,4 +1,4 @@
-var CACHE_NAME = 'mcc-v2';
+var CACHE_NAME = 'mcc-v3';
 var urlsToCache = [
   '/mcc-classes/',
   '/mcc-classes/index.html',
