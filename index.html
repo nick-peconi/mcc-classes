@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mutant Crawl Classics – Character Classes</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;600;700&display=swap');
+
+{ margin:0; padding:0; box-sizing:border-box; }
+  body {
+    background:#0d0d0d;
+    background-image:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,255,100,0.012) 2px,rgba(0,255,100,0.012) 4px);
+    color:#c8c8a0;
+    font-family:'Rajdhani',sans-serif;
+    font-size:17px;
+    line-height:1.6;
+    padding:40px 20px 80px;
+  }
+  header { text-align:center; margin-bottom:50px; padding-bottom:30px; border-bottom:1px solid #3a3a2a; }
+  header h1 { font-family:'Share Tech Mono',monospace; font-size:2.2em; color:#d4a030; text-transform:uppercase; letter-spacing:4px; text-shadow:0 0 20px rgba(212,160,48,0.4); margin-bottom:8px; }
+  header .sub { color:#888870; font-size:1em; letter-spacing:2px; text-transform:uppercase; font-family:'Share Tech Mono',monospace; }
+  .subtitle { max-width:680px; margin:20px auto 0; color:#a0a080; font-size:1.05em; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:24px; max-width:1100px; margin:0 auto; }
+
+.card {
+background:#111108;
+border:1px solid #2a2a1a;
+border-top:3px solid var(–accent);
+border-radius:6px;
+overflow:hidden;
+transition:transform 0.2s, box-shadow 0.2s;
+}
+.card:hover { transform:translateY(-4px); box-shadow:0 10px 40px rgba(0,0,0,0.7); }
+
+/* Icon banner */
+.card-banner {
+width:100%;
+height:120px;
+display:flex;
+align-items:center;
+justify-content:center;
+background:linear-gradient(160deg, #111108 0%, #0a0a06 100%);
+border-bottom:1px solid #1e1e12;
+position:relative;
+overflow:hidden;
+}
+.card-banner::before {
+content:'';
+position:absolute;
+inset:0;
+background:radial-gradient(ellipse at 50% 120%, rgba(var(–accent-rgb),0.18) 0%, transparent 70%);
+}
+.card-icon {
+font-size:3.8em;
+position:relative;
+z-index:1;
+filter:drop-shadow(0 0 12px rgba(var(–accent-rgb),0.5));
+}
+.card-class-label {
+position:absolute;
+bottom:10px;
+right:14px;
+font-family:'Share Tech Mono',monospace;
+font-size:0.65em;
+color:rgba(var(–accent-rgb),0.5);
+text-transform:uppercase;
+letter-spacing:2px;
+}
+
+.card-body { padding:20px 22px 24px; }
+.tag { display:inline-block; font-size:0.72em; font-family:'Share Tech Mono',monospace; text-transform:uppercase; letter-spacing:1px; padding:2px 8px; border-radius:2px; margin-bottom:10px; background:rgba(var(–accent-rgb),0.12); color:var(–accent); border:1px solid rgba(var(–accent-rgb),0.3); }
+.card h2 { font-family:'Share Tech Mono',monospace; font-size:1.3em; color:var(–accent); text-transform:uppercase; letter-spacing:2px; margin-bottom:2px; text-shadow:0 0 10px rgba(var(–accent-rgb),0.25); }
+.role { font-size:0.82em; text-transform:uppercase; letter-spacing:2px; color:#555540; font-family:'Share Tech Mono',monospace; margin-bottom:14px; }
+.card p { color:#b0b090; font-size:0.97em; margin-bottom:16px; line-height:1.6; }
+.best-for { background:rgba(255,255,255,0.03); border-left:3px solid var(–accent); padding:10px 14px; font-size:0.88em; color:#909070; border-radius:0 3px 3px 0; }
+.best-for strong { color:var(–accent); font-family:'Share Tech Mono',monospace; font-size:0.82em; text-transform:uppercase; letter-spacing:1px; display:block; margin-bottom:3px; }
+
+.sentinel  { –accent:#e06030; –accent-rgb:224,96,48; }
+.rover     { –accent:#50b080; –accent-rgb:80,176,128; }
+.shaman    { –accent:#9060d0; –accent-rgb:144,96,208; }
+.healer    { –accent:#40a8c0; –accent-rgb:64,168,192; }
+.mutant    { –accent:#c0c030; –accent-rgb:192,192,48; }
+.manimal   { –accent:#d07030; –accent-rgb:208,112,48; }
+.plantient { –accent:#60c040; –accent-rgb:96,192,64; }
+
+.warning-box { max-width:1100px; margin:40px auto 0; background:#110e00; border:1px solid #3a3010; border-left:4px solid #d4a030; padding:22px 28px; border-radius:4px; }
+.warning-box h3 { font-family:'Share Tech Mono',monospace; color:#d4a030; text-transform:uppercase; letter-spacing:2px; margin-bottom:10px; font-size:1em; }
+.warning-box p { color:#908860; font-size:0.95em; }
+footer { text-align:center; margin-top:50px; font-family:'Share Tech Mono',monospace; font-size:0.75em; color:#444430; letter-spacing:2px; text-transform:uppercase; }
+</style>
+
+</head>
+<body>
+
+<header>
+  <h1>Mutant Crawl Classics</h1>
+  <p class="sub">Character Class Selection // Terra A.D.</p>
+  <p class="subtitle">You survived the Rite of Passage. Now choose who you will become in the wasteland.</p>
+</header>
+
+<div class="grid">
+
+  <div class="card sentinel">
+    <div class="card-banner">
+      <span class="card-icon">⚔️</span>
+      <span class="card-class-label">Sentinel</span>
+    </div>
+    <div class="card-body">
+      <div class="tag">Combat</div>
+      <h2>Sentinel</h2>
+      <div class="role">The Warrior of the Wastes</div>
+      <p>Sentinels are the toughest and hardest-hitting characters in the group. They excel at combat and have a natural talent for identifying and wielding ancient technology — laser pistols, grenades, power armor. Reliable at low levels, devastating once armed with artifacts.</p>
+      <div class="best-for"><strong>Best For</strong>Players who want to be the group's muscle and tech weapon specialist.</div>
+    </div>
+  </div>
+
+  <div class="card rover">
+    <div class="card-banner">
+      <span class="card-icon">🗡️</span>
+      <span class="card-class-label">Rover</span>
+    </div>
+    <div class="card-body">
+      <div class="tag">Stealth / Utility</div>
+      <h2>Rover</h2>
+      <div class="role">The Scout and Scavenger</div>
+      <p>Quick, sneaky, and street-smart. Rovers backstab enemies, move silently, find traps before they kill everyone, and scavenge better than anyone else. They reward clever, opportunistic play over brute force.</p>
+      <div class="best-for"><strong>Best For</strong>Players who like playing smart and picking their moments rather than charging in headfirst.</div>
+    </div>
+  </div>
+
+  <div class="card shaman">
+    <div class="card-banner">
+      <span class="card-icon">🔮</span>
+      <span class="card-class-label">Shaman</span>
+    </div>
+    <div class="card-body">
+      <div class="tag">Tech Magic / Utility</div>
+      <h2>Shaman</h2>
+      <div class="role">Keeper of Ancient Knowledge</div>
+      <p>Shamans treat technology as sacred relics and ancient AIs as gods. They commune with artificial intelligences and ancient systems in ways no other class can. They fill the role of magic user in MCC — mysterious, powerful, and unpredictable.</p>
+      <div class="best-for"><strong>Best For</strong>Players who want a spiritual, mysterious character with unique utility and power.</div>
+    </div>
+  </div>
+
+  <div class="card healer">
+    <div class="card-banner">
+      <span class="card-icon">💉</span>
+      <span class="card-class-label">Healer</span>
+    </div>
+    <div class="card-body">
+      <div class="tag">Support</div>
+      <h2>Healer</h2>
+      <div class="role">The Medic</div>
+      <p>The Healer keeps the group alive — and in a game as lethal as MCC, that matters enormously. Straightforward to play, though healing uses are limited per day so resource management is key. Not flashy, but genuinely vital.</p>
+      <div class="best-for"><strong>Best For</strong>Players who don't mind a support role and want to be the reason everyone else survives.</div>
+    </div>
+  </div>
+
+  <div class="card mutant">
+    <div class="card-banner">
+      <span class="card-icon">☢️</span>
+      <span class="card-class-label">Mutant</span>
+    </div>
+    <div class="card-body">
+      <div class="tag">Mutations / Wild Card</div>
+      <h2>Mutant</h2>
+      <div class="role">Unpredictable. Dangerous. Unique.</div>
+      <p>Pure humans touched by radiation and quantum fields. Mutants have randomly rolled mutations — some powerful, some strange, some outright dangerous. No two Mutants are alike. Your mutations define your character in ways nothing else can replicate.</p>
+      <div class="best-for"><strong>Best For</strong>Players who love randomness, surprises, and a truly one-of-a-kind character.</div>
+    </div>
+  </div>
+
+  <div class="card manimal">
+    <div class="card-banner">
+      <span class="card-icon">🐾</span>
+      <span class="card-class-label">Manimal</span>
+    </div>
+    <div class="card-body">
+      <div class="tag">Mutations / Identity</div>
+      <h2>Manimal</h2>
+      <div class="role">Human-Animal Hybrid</div>
+      <p>Part human, part animal — you choose your animal type and gain mutations and traits tied to that creature. More focused than a straight Mutant. If you're a bear-man, you feel like a bear-man. Flavorful, physical, and fun to roleplay.</p>
+      <div class="best-for"><strong>Best For</strong>Players who want a strong, distinctive identity baked into their character from the start.</div>
+    </div>
+  </div>
+
+  <div class="card plantient">
+    <div class="card-banner">
+      <span class="card-icon">🌿</span>
+      <span class="card-class-label">Plantient</span>
+    </div>
+    <div class="card-body">
+      <div class="tag">Mutations / Exotic</div>
+      <h2>Plantient</h2>
+      <div class="role">Sentient Plant Creature</div>
+      <p>Strange, resilient, and unlike anything else at the table. Plantients have a unique mutation set rooted in plant biology — vines, spores, photosynthesis and more. Genuinely weird in the best way, with a playstyle no other class can match.</p>
+      <div class="best-for"><strong>Best For</strong>Players who want to play something truly alien and different.</div>
+    </div>
+  </div>
+
+</div>
+
+<div class="warning-box">
+  <h3>⚠️ A Note on Tone</h3>
+  <p>Mutant Crawl Classics is gonzo and lethal. Death is real, danger is everywhere, and that's part of the fun. The mutation-based classes (Mutant, Manimal, Plantient) are wild and unpredictable — exciting but sometimes chaotic. The conventional classes (Sentinel, Rover) tend to be more reliable survivors early on. There's no wrong choice — just pick what sounds fun to play. <em>Terra A.D. doesn't care if you're ready.</em></p>
+</div>
+
+<footer>Terra A.D. // Mutant Crawl Classics RPG // Goodman Games</footer>
+
+</body>
+</html>
