@@ -89,6 +89,11 @@ letter-spacing:2px;
 .warning-box h3 { font-family:'Share Tech Mono',monospace; color:#d4a030; text-transform:uppercase; letter-spacing:2px; margin-bottom:10px; font-size:1em; }
 .warning-box p { color:#908860; font-size:0.95em; }
 footer { text-align:center; margin-top:50px; font-family:'Share Tech Mono',monospace; font-size:0.75em; color:#444430; letter-spacing:2px; text-transform:uppercase; }
+
+/* Nav */
+nav { max-width:1100px; margin:0 auto 30px; display:flex; gap:12px; justify-content:center; }
+nav a { font-family:'Share Tech Mono',monospace; font-size:0.85em; color:#d4a030; text-decoration:none; text-transform:uppercase; letter-spacing:2px; padding:8px 20px; border:1px solid #3a3010; border-radius:3px; transition:background 0.2s, color 0.2s; }
+nav a:hover, nav a.active { background:#d4a030; color:#0d0d0d; }
 </style>
 
 </head>
@@ -99,6 +104,11 @@ footer { text-align:center; margin-top:50px; font-family:'Share Tech Mono',monos
   <p class="sub">Character Class Selection // Terra A.D.</p>
   <p class="subtitle">You survived the Rite of Passage. Now choose who you will become in the wasteland.</p>
 </header>
+
+<nav>
+  <a href="index.html" class="active">Classes</a>
+  <a href="pick.html">Pick Your Class</a>
+</nav>
 
 <div class="grid">
 

@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MCC – Pick Your Class</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;600;700&display=swap');
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    background:#0d0d0d;
+    background-image:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,255,100,0.012) 2px,rgba(0,255,100,0.012) 4px);
+    color:#c8c8a0;
+    font-family:'Rajdhani',sans-serif;
+    font-size:17px;
+    line-height:1.6;
+    padding:40px 20px 80px;
+  }
+  header { text-align:center; margin-bottom:20px; padding-bottom:30px; border-bottom:1px solid #3a3a2a; }
+  header h1 { font-family:'Share Tech Mono',monospace; font-size:2.2em; color:#d4a030; text-transform:uppercase; letter-spacing:4px; text-shadow:0 0 20px rgba(212,160,48,0.4); margin-bottom:8px; }
+  header .sub { color:#888870; font-size:1em; letter-spacing:2px; text-transform:uppercase; font-family:'Share Tech Mono',monospace; }
+
+  /* Nav */
+  nav { max-width:1100px; margin:0 auto 30px; display:flex; gap:12px; justify-content:center; }
+  nav a { font-family:'Share Tech Mono',monospace; font-size:0.85em; color:#d4a030; text-decoration:none; text-transform:uppercase; letter-spacing:2px; padding:8px 20px; border:1px solid #3a3010; border-radius:3px; transition:background 0.2s, color 0.2s; }
+  nav a:hover, nav a.active { background:#d4a030; color:#0d0d0d; }
+
+  /* Name entry */
+  .name-entry { max-width:500px; margin:0 auto 40px; text-align:center; }
+  .name-entry label { font-family:'Share Tech Mono',monospace; font-size:0.9em; color:#888870; text-transform:uppercase; letter-spacing:2px; display:block; margin-bottom:10px; }
+  .name-entry input {
+    background:#111108; border:1px solid #3a3a2a; color:#d4a030; font-family:'Share Tech Mono',monospace;
+    font-size:1.1em; padding:12px 20px; border-radius:4px; width:100%; max-width:300px; text-align:center;
+    outline:none; transition:border-color 0.2s;
+  }
+  .name-entry input:focus { border-color:#d4a030; }
+  .name-entry input::placeholder { color:#555540; }
+
+  /* Class grid */
+  .pick-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:16px; max-width:1100px; margin:0 auto; }
+
+  .pick-card {
+    background:#111108; border:1px solid #2a2a1a; border-top:3px solid var(--accent);
+    border-radius:6px; padding:20px; text-align:center; cursor:pointer;
+    transition:transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+    position:relative;
+  }
+  .pick-card:hover { transform:translateY(-3px); box-shadow:0 8px 30px rgba(0,0,0,0.6); }
+  .pick-card.claimed { border-color:var(--accent); box-shadow:0 0 20px rgba(var(--accent-rgb),0.3); }
+  .pick-card.claimed-by-me { border-color:var(--accent); box-shadow:0 0 25px rgba(var(--accent-rgb),0.5); }
+  .pick-card .icon { font-size:2.5em; margin-bottom:8px; }
+  .pick-card h3 { font-family:'Share Tech Mono',monospace; color:var(--accent); text-transform:uppercase; letter-spacing:2px; font-size:1.1em; margin-bottom:4px; }
+  .pick-card .card-role { font-size:0.75em; color:#555540; font-family:'Share Tech Mono',monospace; text-transform:uppercase; letter-spacing:1px; margin-bottom:12px; }
+  .pick-card .claimed-by {
+    font-family:'Share Tech Mono',monospace; font-size:0.8em; color:var(--accent);
+    background:rgba(var(--accent-rgb),0.1); border:1px solid rgba(var(--accent-rgb),0.3);
+    padding:6px 12px; border-radius:3px; margin-top:10px; display:none;
+  }
+  .pick-card.claimed .claimed-by { display:block; }
+  .pick-card .pick-btn {
+    font-family:'Share Tech Mono',monospace; font-size:0.8em; text-transform:uppercase; letter-spacing:1px;
+    background:rgba(var(--accent-rgb),0.15); color:var(--accent); border:1px solid rgba(var(--accent-rgb),0.4);
+    padding:8px 20px; border-radius:3px; cursor:pointer; margin-top:10px; transition:background 0.2s;
+  }
+  .pick-card .pick-btn:hover { background:rgba(var(--accent-rgb),0.3); }
+  .pick-card.claimed .pick-btn { display:none; }
+
+  .sentinel  { --accent:#e06030; --accent-rgb:224,96,48; }
+  .rover     { --accent:#50b080; --accent-rgb:80,176,128; }
+  .shaman    { --accent:#9060d0; --accent-rgb:144,96,208; }
+  .healer    { --accent:#40a8c0; --accent-rgb:64,168,192; }
+  .mutant    { --accent:#c0c030; --accent-rgb:192,192,48; }
+  .manimal   { --accent:#d07030; --accent-rgb:208,112,48; }
+  .plantient { --accent:#60c040; --accent-rgb:96,192,64; }
+
+  /* Party roster */
+  .roster { max-width:1100px; margin:40px auto 0; }
+  .roster h3 { font-family:'Share Tech Mono',monospace; color:#d4a030; text-transform:uppercase; letter-spacing:2px; font-size:1em; margin-bottom:16px; text-align:center; }
+  .roster-list { display:flex; flex-wrap:wrap; gap:10px; justify-content:center; }
+  .roster-entry {
+    font-family:'Share Tech Mono',monospace; font-size:0.85em; padding:8px 16px;
+    background:#111108; border:1px solid #2a2a1a; border-radius:4px; border-left:3px solid var(--accent);
+  }
+  .roster-entry .r-name { color:#c8c8a0; }
+  .roster-entry .r-class { color:var(--accent); text-transform:uppercase; font-size:0.85em; margin-left:6px; }
+
+  /* Status messages */
+  .status-msg {
+    max-width:500px; margin:0 auto 20px; text-align:center; font-family:'Share Tech Mono',monospace;
+    font-size:0.85em; padding:10px; border-radius:4px; display:none;
+  }
+  .status-msg.error { display:block; background:#1a0800; border:1px solid #4a1500; color:#e06030; }
+  .status-msg.success { display:block; background:#001a08; border:1px solid #004a15; color:#50b080; }
+  .status-msg.info { display:block; background:#110e00; border:1px solid #3a3010; color:#d4a030; }
+
+  /* Firebase config notice */
+  .setup-notice {
+    max-width:700px; margin:30px auto; background:#110e00; border:1px solid #3a3010;
+    border-left:4px solid #d4a030; padding:22px 28px; border-radius:4px; display:none;
+  }
+  .setup-notice h3 { font-family:'Share Tech Mono',monospace; color:#d4a030; text-transform:uppercase; letter-spacing:2px; margin-bottom:10px; font-size:1em; }
+  .setup-notice p { color:#908860; font-size:0.92em; }
+  .setup-notice code { background:#0d0d0d; padding:2px 6px; border-radius:2px; color:#d4a030; font-size:0.9em; }
+
+  footer { text-align:center; margin-top:50px; font-family:'Share Tech Mono',monospace; font-size:0.75em; color:#444430; letter-spacing:2px; text-transform:uppercase; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Mutant Crawl Classics</h1>
+  <p class="sub">Pick Your Class // Terra A.D.</p>
+</header>
+
+<nav>
+  <a href="index.html">Classes</a>
+  <a href="pick.html" class="active">Pick Your Class</a>
+</nav>
+
+<div class="name-entry">
+  <label>Enter Your Name, Wastelander</label>
+  <input type="text" id="playerName" placeholder="Your name..." maxlength="20">
+</div>
+
+<div id="statusMsg" class="status-msg"></div>
+
+<div class="pick-grid">
+  <div class="pick-card sentinel" data-class="sentinel">
+    <div class="icon">&#x2694;&#xFE0F;</div>
+    <h3>Sentinel</h3>
+    <div class="card-role">Warrior of the Wastes</div>
+    <button class="pick-btn">Claim</button>
+    <div class="claimed-by"></div>
+  </div>
+
+  <div class="pick-card rover" data-class="rover">
+    <div class="icon">&#x1F5E1;&#xFE0F;</div>
+    <h3>Rover</h3>
+    <div class="card-role">Scout &amp; Scavenger</div>
+    <button class="pick-btn">Claim</button>
+    <div class="claimed-by"></div>
+  </div>
+
+  <div class="pick-card shaman" data-class="shaman">
+    <div class="icon">&#x1F52E;</div>
+    <h3>Shaman</h3>
+    <div class="card-role">Keeper of Ancient Knowledge</div>
+    <button class="pick-btn">Claim</button>
+    <div class="claimed-by"></div>
+  </div>
+
+  <div class="pick-card healer" data-class="healer">
+    <div class="icon">&#x1F489;</div>
+    <h3>Healer</h3>
+    <div class="card-role">The Medic</div>
+    <button class="pick-btn">Claim</button>
+    <div class="claimed-by"></div>
+  </div>
+
+  <div class="pick-card mutant" data-class="mutant">
+    <div class="icon">&#x2622;&#xFE0F;</div>
+    <h3>Mutant</h3>
+    <div class="card-role">Unpredictable &amp; Unique</div>
+    <button class="pick-btn">Claim</button>
+    <div class="claimed-by"></div>
+  </div>
+
+  <div class="pick-card manimal" data-class="manimal">
+    <div class="icon">&#x1F43E;</div>
+    <h3>Manimal</h3>
+    <div class="card-role">Human-Animal Hybrid</div>
+    <button class="pick-btn">Claim</button>
+    <div class="claimed-by"></div>
+  </div>
+
+  <div class="pick-card plantient" data-class="plantient">
+    <div class="icon">&#x1F33F;</div>
+    <h3>Plantient</h3>
+    <div class="card-role">Sentient Plant Creature</div>
+    <button class="pick-btn">Claim</button>
+    <div class="claimed-by"></div>
+  </div>
+</div>
+
+<div class="roster" id="roster" style="display:none;">
+  <h3>&#x1F4CB; Party Roster</h3>
+  <div class="roster-list" id="rosterList"></div>
+</div>
+
+<div class="setup-notice" id="setupNotice">
+  <h3>&#x26A0;&#xFE0F; Firebase Not Configured</h3>
+  <p>Class picks are currently saved locally only. To enable real-time sharing with your group, add your Firebase config to <code>pick.html</code>. See the README for setup instructions.</p>
+</div>
+
+<footer>Terra A.D. // Mutant Crawl Classics RPG // Goodman Games</footer>
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+
+<script>
+(function() {
+  // =====================================================
+  // FIREBASE CONFIG — Replace with your own values
+  // =====================================================
+  const firebaseConfig = {
+    apiKey: "AIzaSyCWmlZK3ZN8Q-AlUmyf0g2hmJIs2Z02eGU",
+    authDomain: "mcccampaign-e10e5.firebaseapp.com",
+    databaseURL: "https://mcccampaign-e10e5-default-rtdb.firebaseio.com",
+    projectId: "mcccampaign-e10e5",
+    storageBucket: "mcccampaign-e10e5.firebasestorage.app",
+    messagingSenderId: "506943857263",
+    appId: "1:506943857263:web:934228794d12d5d15f239a"
+  };
+  // =====================================================
+
+  const isConfigured = firebaseConfig.apiKey !== "YOUR_API_KEY";
+  let db = null;
+  let picksRef = null;
+
+  if (isConfigured) {
+    firebase.initializeApp(firebaseConfig);
+    db = firebase.database();
+    picksRef = db.ref('picks');
+  } else {
+    document.getElementById('setupNotice').style.display = 'block';
+  }
+
+  // State
+  let picks = {}; // { className: playerName }
+  const nameInput = document.getElementById('playerName');
+  const statusMsg = document.getElementById('statusMsg');
+  const cards = document.querySelectorAll('.pick-card');
+
+  // Load from localStorage as fallback / initial state
+  const saved = localStorage.getItem('mcc-picks');
+  if (saved) {
+    try { picks = JSON.parse(saved); } catch(e) {}
+  }
+  const savedName = localStorage.getItem('mcc-player-name');
+  if (savedName) nameInput.value = savedName;
+
+  // Save name on change
+  nameInput.addEventListener('input', function() {
+    localStorage.setItem('mcc-player-name', this.value.trim());
+  });
+
+  // Render picks on cards
+  function render() {
+    const myName = nameInput.value.trim().toLowerCase();
+    cards.forEach(card => {
+      const cls = card.dataset.class;
+      const claimedByEl = card.querySelector('.claimed-by');
+      const owner = picks[cls];
+
+      if (owner) {
+        card.classList.add('claimed');
+        if (owner.toLowerCase() === myName && myName) {
+          card.classList.add('claimed-by-me');
+        } else {
+          card.classList.remove('claimed-by-me');
+        }
+        claimedByEl.textContent = '⚡ ' + owner;
+      } else {
+        card.classList.remove('claimed', 'claimed-by-me');
+        claimedByEl.textContent = '';
+      }
+    });
+    renderRoster();
+  }
+
+  function renderRoster() {
+    const rosterDiv = document.getElementById('roster');
+    const rosterList = document.getElementById('rosterList');
+    const entries = Object.entries(picks);
+
+    if (entries.length === 0) {
+      rosterDiv.style.display = 'none';
+      return;
+    }
+    rosterDiv.style.display = 'block';
+    rosterList.innerHTML = entries.map(([cls, name]) => {
+      return '<div class="roster-entry ' + cls + '" style="--accent:var(--accent);"><span class="r-name">' +
+        escapeHtml(name) + '</span><span class="r-class"> // ' + cls + '</span></div>';
+    }).join('');
+  }
+
+  function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  function showStatus(msg, type) {
+    statusMsg.textContent = msg;
+    statusMsg.className = 'status-msg ' + type;
+    setTimeout(() => { statusMsg.className = 'status-msg'; }, 3000);
+  }
+
+  // Claim handler
+  cards.forEach(card => {
+    card.querySelector('.pick-btn').addEventListener('click', function(e) {
+      e.stopPropagation();
+      const cls = card.dataset.class;
+      const name = nameInput.value.trim();
+
+      if (!name) {
+        showStatus('Enter your name first, wastelander.', 'error');
+        nameInput.focus();
+        return;
+      }
+
+      if (picks[cls]) {
+        showStatus(picks[cls] + ' already claimed ' + cls + '!', 'error');
+        return;
+      }
+
+      // Check if player already picked a different class
+      const existing = Object.entries(picks).find(([c, n]) => n.toLowerCase() === name.toLowerCase());
+      if (existing) {
+        showStatus('You already claimed ' + existing[0] + '! Unclaim it first.', 'error');
+        return;
+      }
+
+      picks[cls] = name;
+      save();
+      render();
+      showStatus('You claimed ' + cls + '!', 'success');
+    });
+
+    // Click card to unclaim (if you own it)
+    card.addEventListener('click', function() {
+      const cls = card.dataset.class;
+      const name = nameInput.value.trim();
+      if (picks[cls] && picks[cls].toLowerCase() === name.toLowerCase()) {
+        delete picks[cls];
+        save();
+        render();
+        showStatus('Unclaimed ' + cls + '.', 'info');
+      }
+    });
+  });
+
+  function save() {
+    localStorage.setItem('mcc-picks', JSON.stringify(picks));
+    if (picksRef) {
+      picksRef.set(picks);
+    }
+  }
+
+  // Firebase real-time listener
+  if (picksRef) {
+    picksRef.on('value', function(snapshot) {
+      const data = snapshot.val();
+      picks = data || {};
+      localStorage.setItem('mcc-picks', JSON.stringify(picks));
+      render();
+    });
+  }
+
+  // Initial render
+  render();
+
+  // Re-render when name changes (to highlight your pick)
+  nameInput.addEventListener('input', function() {
+    render();
+  });
+})();
+</script>
+
+</body>
+</html>
