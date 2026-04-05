@@ -26,16 +26,27 @@
   nav a { font-family:'Share Tech Mono',monospace; font-size:0.85em; color:#d4a030; text-decoration:none; text-transform:uppercase; letter-spacing:2px; padding:8px 20px; border:1px solid #3a3010; border-radius:3px; transition:background 0.2s, color 0.2s; }
   nav a:hover, nav a.active { background:#d4a030; color:#0d0d0d; }
 
-  /* Name entry */
-  .name-entry { max-width:500px; margin:0 auto 40px; text-align:center; }
-  .name-entry label { font-family:'Share Tech Mono',monospace; font-size:0.9em; color:#888870; text-transform:uppercase; letter-spacing:2px; display:block; margin-bottom:10px; }
-  .name-entry input {
-    background:#111108; border:1px solid #3a3a2a; color:#d4a030; font-family:'Share Tech Mono',monospace;
-    font-size:1.1em; padding:12px 20px; border-radius:4px; width:100%; max-width:300px; text-align:center;
-    outline:none; transition:border-color 0.2s;
+  /* Auth section */
+  .auth-section { max-width:500px; margin:0 auto 40px; text-align:center; }
+  .sign-in-btn {
+    font-family:'Share Tech Mono',monospace; font-size:0.9em; text-transform:uppercase; letter-spacing:1px;
+    background:#111108; color:#d4a030; border:1px solid #3a3010; padding:12px 28px; border-radius:4px;
+    cursor:pointer; transition:background 0.2s, border-color 0.2s;
   }
-  .name-entry input:focus { border-color:#d4a030; }
-  .name-entry input::placeholder { color:#555540; }
+  .sign-in-btn:hover { background:#1a1a10; border-color:#d4a030; }
+  .user-info {
+    display:flex; align-items:center; justify-content:center; gap:12px;
+    font-family:'Share Tech Mono',monospace;
+  }
+  .user-info img { width:32px; height:32px; border-radius:50%; border:2px solid #d4a030; }
+  .user-info .user-name { color:#d4a030; font-size:1em; }
+  .sign-out-btn {
+    font-family:'Share Tech Mono',monospace; font-size:0.7em; text-transform:uppercase; letter-spacing:1px;
+    background:none; color:#555540; border:1px solid #2a2a1a; padding:4px 12px; border-radius:3px;
+    cursor:pointer; transition:color 0.2s;
+  }
+  .sign-out-btn:hover { color:#e06030; border-color:#e06030; }
+  .auth-prompt { font-family:'Share Tech Mono',monospace; font-size:0.85em; color:#888870; text-transform:uppercase; letter-spacing:2px; margin-bottom:14px; }
 
   /* Class grid */
   .pick-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:16px; max-width:1100px; margin:0 auto; }
@@ -94,15 +105,6 @@
   .status-msg.success { display:block; background:#001a08; border:1px solid #004a15; color:#50b080; }
   .status-msg.info { display:block; background:#110e00; border:1px solid #3a3010; color:#d4a030; }
 
-  /* Firebase config notice */
-  .setup-notice {
-    max-width:700px; margin:30px auto; background:#110e00; border:1px solid #3a3010;
-    border-left:4px solid #d4a030; padding:22px 28px; border-radius:4px; display:none;
-  }
-  .setup-notice h3 { font-family:'Share Tech Mono',monospace; color:#d4a030; text-transform:uppercase; letter-spacing:2px; margin-bottom:10px; font-size:1em; }
-  .setup-notice p { color:#908860; font-size:0.92em; }
-  .setup-notice code { background:#0d0d0d; padding:2px 6px; border-radius:2px; color:#d4a030; font-size:0.9em; }
-
   footer { text-align:center; margin-top:50px; font-family:'Share Tech Mono',monospace; font-size:0.75em; color:#444430; letter-spacing:2px; text-transform:uppercase; }
 </style>
 </head>
@@ -118,9 +120,18 @@
   <a href="pick.html" class="active">Pick Your Class</a>
 </nav>
 
-<div class="name-entry">
-  <label>Enter Your Name, Wastelander</label>
-  <input type="text" id="playerName" placeholder="Your name..." maxlength="20">
+<div class="auth-section" id="authSection">
+  <div id="signedOut">
+    <p class="auth-prompt">Sign in to claim your class</p>
+    <button class="sign-in-btn" id="signInBtn">Sign in with Google</button>
+  </div>
+  <div id="signedIn" style="display:none;">
+    <div class="user-info">
+      <img id="userPhoto" src="" alt="">
+      <span class="user-name" id="userName"></span>
+      <button class="sign-out-btn" id="signOutBtn">Sign Out</button>
+    </div>
+  </div>
 </div>
 
 <div id="statusMsg" class="status-msg"></div>
@@ -188,22 +199,15 @@
   <div class="roster-list" id="rosterList"></div>
 </div>
 
-<div class="setup-notice" id="setupNotice">
-  <h3>&#x26A0;&#xFE0F; Firebase Not Configured</h3>
-  <p>Class picks are currently saved locally only. To enable real-time sharing with your group, add your Firebase config to <code>pick.html</code>. See the README for setup instructions.</p>
-</div>
-
 <footer>Terra A.D. // Mutant Crawl Classics RPG // Goodman Games</footer>
 
 <!-- Firebase SDK -->
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
 
 <script>
 (function() {
-  // =====================================================
-  // FIREBASE CONFIG — Replace with your own values
-  // =====================================================
   const firebaseConfig = {
     apiKey: "AIzaSyCWmlZK3ZN8Q-AlUmyf0g2hmJIs2Z02eGU",
     authDomain: "mcccampaign-e10e5.firebaseapp.com",
@@ -213,55 +217,68 @@
     messagingSenderId: "506943857263",
     appId: "1:506943857263:web:934228794d12d5d15f239a"
   };
-  // =====================================================
 
-  const isConfigured = firebaseConfig.apiKey !== "YOUR_API_KEY";
-  let db = null;
-  let picksRef = null;
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.database();
+  const picksRef = db.ref('picks');
+  const provider = new firebase.auth.GoogleAuthProvider();
 
-  if (isConfigured) {
-    firebase.initializeApp(firebaseConfig);
-    db = firebase.database();
-    picksRef = db.ref('picks');
-  } else {
-    document.getElementById('setupNotice').style.display = 'block';
-  }
-
-  // State
-  let picks = {}; // { className: playerName }
-  const nameInput = document.getElementById('playerName');
+  // DOM
+  const signedOutDiv = document.getElementById('signedOut');
+  const signedInDiv = document.getElementById('signedIn');
+  const signInBtn = document.getElementById('signInBtn');
+  const signOutBtn = document.getElementById('signOutBtn');
+  const userPhoto = document.getElementById('userPhoto');
+  const userNameEl = document.getElementById('userName');
   const statusMsg = document.getElementById('statusMsg');
   const cards = document.querySelectorAll('.pick-card');
 
-  // Load from localStorage as fallback / initial state
-  const saved = localStorage.getItem('mcc-picks');
-  if (saved) {
-    try { picks = JSON.parse(saved); } catch(e) {}
-  }
-  const savedName = localStorage.getItem('mcc-player-name');
-  if (savedName) nameInput.value = savedName;
+  let currentUser = null; // { uid, displayName, photoURL }
+  let picks = {}; // { className: { uid, name, photo } }
 
-  // Save name on change
-  nameInput.addEventListener('input', function() {
-    localStorage.setItem('mcc-player-name', this.value.trim());
+  // Auth state
+  auth.onAuthStateChanged(function(user) {
+    if (user) {
+      currentUser = { uid: user.uid, displayName: user.displayName, photoURL: user.photoURL };
+      signedOutDiv.style.display = 'none';
+      signedInDiv.style.display = 'block';
+      userNameEl.textContent = user.displayName;
+      userPhoto.src = user.photoURL || '';
+    } else {
+      currentUser = null;
+      signedOutDiv.style.display = 'block';
+      signedInDiv.style.display = 'none';
+    }
+    render();
+  });
+
+  signInBtn.addEventListener('click', function() {
+    auth.signInWithPopup(provider).catch(function(err) {
+      console.error('Sign-in error:', err);
+      showStatus('Sign-in failed. Try again.', 'error');
+    });
+  });
+
+  signOutBtn.addEventListener('click', function() {
+    auth.signOut();
   });
 
   // Render picks on cards
   function render() {
-    const myName = nameInput.value.trim().toLowerCase();
-    cards.forEach(card => {
-      const cls = card.dataset.class;
-      const claimedByEl = card.querySelector('.claimed-by');
-      const owner = picks[cls];
+    cards.forEach(function(card) {
+      var cls = card.dataset.class;
+      var claimedByEl = card.querySelector('.claimed-by');
+      var pick = picks[cls];
 
-      if (owner) {
+      if (pick) {
         card.classList.add('claimed');
-        if (owner.toLowerCase() === myName && myName) {
+        if (currentUser && pick.uid === currentUser.uid) {
           card.classList.add('claimed-by-me');
         } else {
           card.classList.remove('claimed-by-me');
         }
-        claimedByEl.textContent = '⚡ ' + owner;
+        claimedByEl.textContent = '\u26A1 ' + pick.name;
       } else {
         card.classList.remove('claimed', 'claimed-by-me');
         claimedByEl.textContent = '';
@@ -271,23 +288,24 @@
   }
 
   function renderRoster() {
-    const rosterDiv = document.getElementById('roster');
-    const rosterList = document.getElementById('rosterList');
-    const entries = Object.entries(picks);
+    var rosterDiv = document.getElementById('roster');
+    var rosterList = document.getElementById('rosterList');
+    var entries = Object.entries(picks);
 
     if (entries.length === 0) {
       rosterDiv.style.display = 'none';
       return;
     }
     rosterDiv.style.display = 'block';
-    rosterList.innerHTML = entries.map(([cls, name]) => {
-      return '<div class="roster-entry ' + cls + '" style="--accent:var(--accent);"><span class="r-name">' +
-        escapeHtml(name) + '</span><span class="r-class"> // ' + cls + '</span></div>';
+    rosterList.innerHTML = entries.map(function(entry) {
+      var cls = entry[0], pick = entry[1];
+      return '<div class="roster-entry ' + cls + '"><span class="r-name">' +
+        escapeHtml(pick.name) + '</span><span class="r-class"> // ' + cls + '</span></div>';
     }).join('');
   }
 
   function escapeHtml(str) {
-    const div = document.createElement('div');
+    var div = document.createElement('div');
     div.textContent = str;
     return div.innerHTML;
   }
@@ -295,75 +313,57 @@
   function showStatus(msg, type) {
     statusMsg.textContent = msg;
     statusMsg.className = 'status-msg ' + type;
-    setTimeout(() => { statusMsg.className = 'status-msg'; }, 3000);
+    setTimeout(function() { statusMsg.className = 'status-msg'; }, 3000);
   }
 
   // Claim handler
-  cards.forEach(card => {
+  cards.forEach(function(card) {
     card.querySelector('.pick-btn').addEventListener('click', function(e) {
       e.stopPropagation();
-      const cls = card.dataset.class;
-      const name = nameInput.value.trim();
-
-      if (!name) {
-        showStatus('Enter your name first, wastelander.', 'error');
-        nameInput.focus();
+      if (!currentUser) {
+        showStatus('Sign in first, wastelander.', 'error');
         return;
       }
 
+      var cls = card.dataset.class;
+
       if (picks[cls]) {
-        showStatus(picks[cls] + ' already claimed ' + cls + '!', 'error');
+        showStatus(picks[cls].name + ' already claimed ' + cls + '!', 'error');
         return;
       }
 
       // Check if player already picked a different class
-      const existing = Object.entries(picks).find(([c, n]) => n.toLowerCase() === name.toLowerCase());
+      var existing = Object.entries(picks).find(function(entry) {
+        return entry[1].uid === currentUser.uid;
+      });
       if (existing) {
-        showStatus('You already claimed ' + existing[0] + '! Unclaim it first.', 'error');
+        showStatus('You already claimed ' + existing[0] + '! Click it to unclaim.', 'error');
         return;
       }
 
-      picks[cls] = name;
-      save();
-      render();
+      picksRef.child(cls).set({
+        uid: currentUser.uid,
+        name: currentUser.displayName,
+        photo: currentUser.photoURL || ''
+      });
       showStatus('You claimed ' + cls + '!', 'success');
     });
 
     // Click card to unclaim (if you own it)
     card.addEventListener('click', function() {
-      const cls = card.dataset.class;
-      const name = nameInput.value.trim();
-      if (picks[cls] && picks[cls].toLowerCase() === name.toLowerCase()) {
-        delete picks[cls];
-        save();
-        render();
+      if (!currentUser) return;
+      var cls = card.dataset.class;
+      if (picks[cls] && picks[cls].uid === currentUser.uid) {
+        picksRef.child(cls).remove();
         showStatus('Unclaimed ' + cls + '.', 'info');
       }
     });
   });
 
-  function save() {
-    localStorage.setItem('mcc-picks', JSON.stringify(picks));
-    if (picksRef) {
-      picksRef.set(picks);
-    }
-  }
-
   // Firebase real-time listener
-  if (picksRef) {
-    picksRef.on('value', function(snapshot) {
-      const data = snapshot.val();
-      picks = data || {};
-      localStorage.setItem('mcc-picks', JSON.stringify(picks));
-      render();
-    });
-  }
-
-  // Initial render
-  render();
-
-  // Re-render when name changes (to highlight your pick)
-  nameInput.addEventListener('input', function() {
+  picksRef.on('value', function(snapshot) {
+    var data = snapshot.val();
+    picks = data || {};
     render();
   });
 })();
