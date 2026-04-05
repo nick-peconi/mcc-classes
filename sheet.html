@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MCC – Character Sheet</title>
+<title>MCC – Character Record Sheet</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;600;700&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;600;700&family=Cinzel:wght@700;900&display=swap');
 
   * { margin:0; padding:0; box-sizing:border-box; }
   body {
@@ -21,140 +21,227 @@
   header h1 { font-family:'Share Tech Mono',monospace; font-size:2.2em; color:#d4a030; text-transform:uppercase; letter-spacing:4px; text-shadow:0 0 20px rgba(212,160,48,0.4); margin-bottom:8px; }
   header .sub { color:#888870; font-size:1em; letter-spacing:2px; text-transform:uppercase; font-family:'Share Tech Mono',monospace; }
 
-  nav { max-width:1100px; margin:0 auto 30px; display:flex; gap:12px; justify-content:center; }
+  nav { max-width:1100px; margin:0 auto 30px; display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
   nav a { font-family:'Share Tech Mono',monospace; font-size:0.85em; color:#d4a030; text-decoration:none; text-transform:uppercase; letter-spacing:2px; padding:8px 20px; border:1px solid #3a3010; border-radius:3px; transition:background 0.2s, color 0.2s; }
   nav a:hover, nav a.active { background:#d4a030; color:#0d0d0d; }
 
   /* Auth */
   .auth-section { max-width:500px; margin:0 auto 30px; text-align:center; }
-  .sign-in-btn {
-    font-family:'Share Tech Mono',monospace; font-size:0.9em; text-transform:uppercase; letter-spacing:1px;
-    background:#111108; color:#d4a030; border:1px solid #3a3010; padding:12px 28px; border-radius:4px;
-    cursor:pointer; transition:background 0.2s, border-color 0.2s;
-  }
+  .sign-in-btn { font-family:'Share Tech Mono',monospace; font-size:0.9em; text-transform:uppercase; letter-spacing:1px; background:#111108; color:#d4a030; border:1px solid #3a3010; padding:12px 28px; border-radius:4px; cursor:pointer; transition:background 0.2s; }
   .sign-in-btn:hover { background:#1a1a10; border-color:#d4a030; }
   .user-info { display:flex; align-items:center; justify-content:center; gap:12px; font-family:'Share Tech Mono',monospace; }
   .user-info img { width:32px; height:32px; border-radius:50%; border:2px solid #d4a030; }
-  .user-info .user-name { color:#d4a030; font-size:1em; }
-  .sign-out-btn {
-    font-family:'Share Tech Mono',monospace; font-size:0.7em; text-transform:uppercase; letter-spacing:1px;
-    background:none; color:#555540; border:1px solid #2a2a1a; padding:4px 12px; border-radius:3px;
-    cursor:pointer; transition:color 0.2s;
-  }
+  .user-info .user-name { color:#d4a030; }
+  .sign-out-btn { font-family:'Share Tech Mono',monospace; font-size:0.7em; text-transform:uppercase; background:none; color:#555540; border:1px solid #2a2a1a; padding:4px 12px; border-radius:3px; cursor:pointer; }
   .sign-out-btn:hover { color:#e06030; border-color:#e06030; }
   .auth-prompt { font-family:'Share Tech Mono',monospace; font-size:0.85em; color:#888870; text-transform:uppercase; letter-spacing:2px; margin-bottom:14px; }
 
-  /* Status */
-  .status-msg {
-    max-width:500px; margin:0 auto 20px; text-align:center; font-family:'Share Tech Mono',monospace;
-    font-size:0.85em; padding:10px; border-radius:4px; display:none;
-  }
+  /* Status & save */
+  .status-msg { max-width:500px; margin:0 auto 20px; text-align:center; font-family:'Share Tech Mono',monospace; font-size:0.85em; padding:10px; border-radius:4px; display:none; }
   .status-msg.error { display:block; background:#1a0800; border:1px solid #4a1500; color:#e06030; }
   .status-msg.info { display:block; background:#110e00; border:1px solid #3a3010; color:#d4a030; }
   .status-msg.success { display:block; background:#001a08; border:1px solid #004a15; color:#50b080; }
 
-  /* Save indicator */
-  .save-indicator {
-    position:fixed; top:16px; right:20px; font-family:'Share Tech Mono',monospace;
-    font-size:0.75em; text-transform:uppercase; letter-spacing:1px; padding:6px 14px;
-    border-radius:3px; z-index:100; opacity:0; transition:opacity 0.3s;
-  }
+  .save-indicator { position:fixed; top:16px; right:20px; font-family:'Share Tech Mono',monospace; font-size:0.75em; text-transform:uppercase; letter-spacing:1px; padding:6px 14px; border-radius:3px; z-index:100; opacity:0; transition:opacity 0.3s; }
   .save-indicator.saving { opacity:1; background:#110e00; border:1px solid #3a3010; color:#d4a030; }
   .save-indicator.saved { opacity:1; background:#001a08; border:1px solid #004a15; color:#50b080; }
 
-  /* Sheet */
-  .sheet { max-width:800px; margin:0 auto; display:none; }
-
-  .class-banner {
-    text-align:center; padding:20px; margin-bottom:30px;
-    background:#111108; border:1px solid #2a2a1a; border-radius:6px;
-    border-top:3px solid var(--accent);
-  }
-  .class-banner .class-icon { font-size:2.5em; }
-  .class-banner h2 { font-family:'Share Tech Mono',monospace; color:var(--accent); text-transform:uppercase; letter-spacing:3px; font-size:1.4em; }
-  .class-banner .class-role { font-size:0.8em; color:#555540; font-family:'Share Tech Mono',monospace; text-transform:uppercase; letter-spacing:1px; }
-
-  .section { background:#111108; border:1px solid #2a2a1a; border-radius:6px; padding:20px 24px; margin-bottom:20px; }
-  .section h3 {
-    font-family:'Share Tech Mono',monospace; color:#d4a030; text-transform:uppercase;
-    letter-spacing:2px; font-size:0.9em; margin-bottom:16px; padding-bottom:8px;
-    border-bottom:1px solid #2a2a1a;
-  }
-
-  .field-row { display:flex; gap:16px; margin-bottom:12px; flex-wrap:wrap; }
-  .field { flex:1; min-width:120px; }
-  .field label {
-    display:block; font-family:'Share Tech Mono',monospace; font-size:0.72em;
-    color:#888870; text-transform:uppercase; letter-spacing:1px; margin-bottom:4px;
-  }
-  .field input, .field textarea, .field select {
-    width:100%; background:#0a0a06; border:1px solid #2a2a1a; color:#c8c8a0;
-    font-family:'Rajdhani',sans-serif; font-size:1em; padding:8px 12px; border-radius:3px;
-    outline:none; transition:border-color 0.2s;
-  }
-  .field input:focus, .field textarea:focus, .field select:focus { border-color:#d4a030; }
-  .field input::placeholder, .field textarea::placeholder { color:#333320; }
-  .field textarea { resize:vertical; min-height:80px; line-height:1.5; }
-
-  /* Ability scores grid */
-  .abilities { display:grid; grid-template-columns:repeat(3, 1fr); gap:12px; }
-  .ability {
-    text-align:center; background:#0a0a06; border:1px solid #2a2a1a; border-radius:4px; padding:12px 8px;
-  }
-  .ability label {
-    display:block; font-family:'Share Tech Mono',monospace; font-size:0.7em;
-    color:#888870; text-transform:uppercase; letter-spacing:1px; margin-bottom:6px;
-  }
-  .ability input {
-    width:60px; text-align:center; background:transparent; border:1px solid #2a2a1a;
-    color:#d4a030; font-family:'Share Tech Mono',monospace; font-size:1.4em; padding:6px;
-    border-radius:3px; outline:none;
-  }
-  .ability input:focus { border-color:#d4a030; }
-  .ability .mod {
-    font-family:'Share Tech Mono',monospace; font-size:0.75em; color:#555540; margin-top:4px;
-  }
-
-  /* Combat stats */
-  .combat-stats { display:grid; grid-template-columns:repeat(auto-fill, minmax(140px,1fr)); gap:12px; }
-  .combat-stat {
-    text-align:center; background:#0a0a06; border:1px solid #2a2a1a; border-radius:4px; padding:12px 8px;
-  }
-  .combat-stat label {
-    display:block; font-family:'Share Tech Mono',monospace; font-size:0.7em;
-    color:#888870; text-transform:uppercase; letter-spacing:1px; margin-bottom:6px;
-  }
-  .combat-stat input {
-    width:70px; text-align:center; background:transparent; border:1px solid #2a2a1a;
-    color:#e06030; font-family:'Share Tech Mono',monospace; font-size:1.3em; padding:6px;
-    border-radius:3px; outline:none;
-  }
-  .combat-stat input:focus { border-color:#d4a030; }
-
-  /* Mutations section */
-  .mutation-list { display:flex; flex-direction:column; gap:8px; }
-  .mutation-entry {
-    display:flex; gap:10px; align-items:center;
-  }
-  .mutation-entry input { flex:1; }
-  .mutation-entry .remove-btn {
-    background:none; border:1px solid #2a2a1a; color:#555540; font-size:1.2em;
-    width:30px; height:30px; border-radius:3px; cursor:pointer; transition:color 0.2s;
-    display:flex; align-items:center; justify-content:center;
-  }
-  .mutation-entry .remove-btn:hover { color:#e06030; border-color:#e06030; }
-  .add-btn {
-    font-family:'Share Tech Mono',monospace; font-size:0.8em; text-transform:uppercase; letter-spacing:1px;
-    background:rgba(212,160,48,0.1); color:#d4a030; border:1px solid #3a3010;
-    padding:8px 16px; border-radius:3px; cursor:pointer; margin-top:8px; transition:background 0.2s;
-  }
-  .add-btn:hover { background:rgba(212,160,48,0.2); }
-
-  /* No class */
   .no-class { max-width:500px; margin:40px auto; text-align:center; }
   .no-class p { font-family:'Share Tech Mono',monospace; color:#888870; font-size:1em; margin-bottom:16px; }
   .no-class a { color:#d4a030; }
 
+  /* ============ CHARACTER SHEET ============ */
+  .sheet { max-width:900px; margin:0 auto; display:none; }
+
+  /* Sheet title bar */
+  .sheet-title {
+    background:#111108; border:2px solid #3a3a2a; border-radius:6px;
+    text-align:center; padding:10px 20px; margin-bottom:16px;
+    position:relative;
+  }
+  .sheet-title h2 { font-family:'Share Tech Mono',monospace; font-size:1.1em; color:#d4a030; text-transform:uppercase; letter-spacing:4px; }
+  .sheet-class-badge {
+    position:absolute; right:16px; top:50%; transform:translateY(-50%);
+    font-family:'Share Tech Mono',monospace; font-size:0.75em; color:var(--accent);
+    background:rgba(var(--accent-rgb),0.1); border:1px solid rgba(var(--accent-rgb),0.3);
+    padding:4px 12px; border-radius:3px; text-transform:uppercase; letter-spacing:2px;
+  }
+
+  /* Main grid layout matching the PDF */
+  .sheet-grid {
+    display:grid;
+    grid-template-columns:280px 1fr;
+    gap:16px;
+  }
+
+  /* Shared box style */
+  .box {
+    background:#111108; border:1px solid #2a2a1a; border-radius:4px; padding:14px 16px;
+  }
+  .box-header {
+    font-family:'Share Tech Mono',monospace; font-size:0.75em; color:#d4a030;
+    text-transform:uppercase; letter-spacing:2px; margin-bottom:10px; padding-bottom:6px;
+    border-bottom:1px solid #2a2a1a;
+  }
+
+  /* ---- TOP ROW: Identity ---- */
+  .identity-row {
+    grid-column:1 / -1;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+  }
+  .identity-row .box { display:flex; flex-wrap:wrap; gap:10px; align-items:end; }
+
+  .field { display:flex; flex-direction:column; }
+  .field label { font-family:'Share Tech Mono',monospace; font-size:0.65em; color:#888870; text-transform:uppercase; letter-spacing:1px; margin-bottom:2px; }
+  .field input, .field select, .field textarea {
+    background:#0a0a06; border:1px solid #2a2a1a; color:#c8c8a0; font-family:'Rajdhani',sans-serif;
+    font-size:0.95em; padding:6px 10px; border-radius:3px; outline:none; transition:border-color 0.2s;
+  }
+  .field input:focus, .field select:focus, .field textarea:focus { border-color:#d4a030; }
+  .field input::placeholder, .field textarea::placeholder { color:#333320; }
+  .field textarea { resize:vertical; min-height:70px; line-height:1.4; }
+
+  /* AC & HP circles */
+  .circle-stats {
+    display:flex; gap:16px; align-items:center; margin-bottom:10px;
+  }
+  .circle-stat {
+    text-align:center;
+  }
+  .circle-stat label { font-family:'Share Tech Mono',monospace; font-size:0.65em; color:#888870; text-transform:uppercase; letter-spacing:1px; display:block; margin-bottom:4px; }
+  .circle-stat input {
+    width:56px; height:56px; border-radius:50%; text-align:center;
+    background:#0a0a06; border:2px solid #3a3a2a; color:#d4a030;
+    font-family:'Share Tech Mono',monospace; font-size:1.3em; outline:none;
+  }
+  .circle-stat input:focus { border-color:#d4a030; }
+
+  /* ---- LEFT COLUMN: Abilities + Saves + Combat ---- */
+  .left-col { display:flex; flex-direction:column; gap:16px; }
+
+  /* Ability scores */
+  .ability-list { display:flex; flex-direction:column; gap:8px; }
+  .ability-row {
+    display:flex; align-items:center; gap:8px;
+    background:#0a0a06; border:1px solid #1e1e12; border-radius:4px; padding:8px 10px;
+  }
+  .ability-row .ab-score {
+    width:44px; height:44px; border-radius:50%; text-align:center;
+    background:#111108; border:2px solid #2a2a1a; color:#d4a030;
+    font-family:'Share Tech Mono',monospace; font-size:1.2em; outline:none; line-height:40px;
+  }
+  .ability-row .ab-score:focus { border-color:#d4a030; }
+  .ability-row .ab-name { font-family:'Share Tech Mono',monospace; font-size:0.85em; color:#c8c8a0; text-transform:uppercase; letter-spacing:1px; flex:1; }
+  .ability-row .ab-mod-label { font-family:'Share Tech Mono',monospace; font-size:0.6em; color:#555540; text-transform:uppercase; }
+  .ability-row .ab-mod {
+    width:44px; text-align:center; background:transparent; border:1px solid #2a2a1a;
+    color:#50b080; font-family:'Share Tech Mono',monospace; font-size:0.9em; padding:4px;
+    border-radius:3px; outline:none;
+  }
+  .ability-row .ab-mod:focus { border-color:#d4a030; }
+
+  /* Saves */
+  .saves-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+  .save-box {
+    background:#0a0a06; border:1px solid #1e1e12; border-radius:4px; padding:8px;
+    text-align:center;
+  }
+  .save-box label { font-family:'Share Tech Mono',monospace; font-size:0.65em; color:#888870; text-transform:uppercase; letter-spacing:1px; display:block; margin-bottom:4px; }
+  .save-box input {
+    width:48px; text-align:center; background:transparent; border:1px solid #2a2a1a;
+    color:#e06030; font-family:'Share Tech Mono',monospace; font-size:1.1em; padding:4px;
+    border-radius:3px; outline:none;
+  }
+  .save-box input:focus { border-color:#d4a030; }
+
+  /* Combat basics */
+  .combat-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+  .combat-field {
+    background:#0a0a06; border:1px solid #1e1e12; border-radius:4px; padding:8px;
+    text-align:center;
+  }
+  .combat-field label { font-family:'Share Tech Mono',monospace; font-size:0.6em; color:#888870; text-transform:uppercase; letter-spacing:1px; display:block; margin-bottom:4px; }
+  .combat-field input {
+    width:100%; max-width:80px; text-align:center; background:transparent; border:1px solid #2a2a1a;
+    color:#c8c8a0; font-family:'Share Tech Mono',monospace; font-size:0.95em; padding:4px;
+    border-radius:3px; outline:none;
+  }
+  .combat-field input:focus { border-color:#d4a030; }
+
+  /* Attack table */
+  .attack-grid { display:grid; grid-template-columns:1fr 1fr; gap:6px; }
+  .attack-cell {
+    background:#0a0a06; border:1px solid #1e1e12; border-radius:3px; padding:6px;
+    text-align:center;
+  }
+  .attack-cell label { font-family:'Share Tech Mono',monospace; font-size:0.55em; color:#888870; text-transform:uppercase; letter-spacing:1px; display:block; margin-bottom:2px; }
+  .attack-cell input {
+    width:100%; text-align:center; background:transparent; border:1px solid #2a2a1a;
+    color:#c8c8a0; font-family:'Share Tech Mono',monospace; font-size:0.85em; padding:3px;
+    border-radius:2px; outline:none;
+  }
+  .attack-cell input:focus { border-color:#d4a030; }
+
+  /* Artifact check */
+  .artifact-check-row {
+    display:flex; gap:10px; align-items:center; margin-top:8px;
+  }
+  .artifact-check-row .circle-stat input { width:48px; height:48px; font-size:1.1em; }
+
+  /* Birth sign */
+  .birth-sign .field textarea { min-height:50px; width:100%; }
+
+  /* ---- RIGHT COLUMN ---- */
+  .right-col { display:flex; flex-direction:column; gap:16px; }
+
+  /* Weapons & Armor table */
+  .weapons-table { width:100%; border-collapse:collapse; }
+  .weapons-table th {
+    font-family:'Share Tech Mono',monospace; font-size:0.6em; color:#888870;
+    text-transform:uppercase; letter-spacing:1px; padding:4px 6px; text-align:left;
+    border-bottom:1px solid #2a2a1a;
+  }
+  .weapons-table td { padding:3px 4px; }
+  .weapons-table input {
+    width:100%; background:#0a0a06; border:1px solid #1e1e12; color:#c8c8a0;
+    font-family:'Rajdhani',sans-serif; font-size:0.88em; padding:5px 8px; border-radius:2px; outline:none;
+  }
+  .weapons-table input:focus { border-color:#d4a030; }
+
+  /* Class abilities & mutations/wetware */
+  .list-section { display:flex; flex-direction:column; gap:6px; }
+  .list-entry { display:flex; gap:6px; align-items:center; }
+  .list-entry input { flex:1; }
+  .list-entry .le-check {
+    width:50px; text-align:center;
+  }
+  .list-entry .le-effect { flex:1; }
+  .list-entry .remove-btn {
+    background:none; border:1px solid #2a2a1a; color:#555540; font-size:1em;
+    width:26px; height:26px; border-radius:3px; cursor:pointer; display:flex;
+    align-items:center; justify-content:center; transition:color 0.2s; flex-shrink:0;
+  }
+  .list-entry .remove-btn:hover { color:#e06030; border-color:#e06030; }
+
+  .list-header {
+    display:flex; gap:6px; font-family:'Share Tech Mono',monospace; font-size:0.6em;
+    color:#888870; text-transform:uppercase; letter-spacing:1px; padding:0 0 4px;
+  }
+  .list-header span { flex:1; }
+  .list-header .lh-check { width:50px; text-align:center; }
+  .list-header .lh-remove { width:26px; }
+
+  .add-btn {
+    font-family:'Share Tech Mono',monospace; font-size:0.75em; text-transform:uppercase; letter-spacing:1px;
+    background:rgba(212,160,48,0.1); color:#d4a030; border:1px solid #3a3010;
+    padding:6px 14px; border-radius:3px; cursor:pointer; margin-top:6px; transition:background 0.2s;
+    align-self:flex-start;
+  }
+  .add-btn:hover { background:rgba(212,160,48,0.2); }
+
+  /* Color accents per class */
   .sentinel  { --accent:#e06030; --accent-rgb:224,96,48; }
   .rover     { --accent:#50b080; --accent-rgb:80,176,128; }
   .shaman    { --accent:#9060d0; --accent-rgb:144,96,208; }
@@ -165,9 +252,10 @@
 
   footer { text-align:center; margin-top:50px; font-family:'Share Tech Mono',monospace; font-size:0.75em; color:#444430; letter-spacing:2px; text-transform:uppercase; }
 
-  @media (max-width:500px) {
-    .abilities { grid-template-columns:repeat(2, 1fr); }
-    .combat-stats { grid-template-columns:repeat(2, 1fr); }
+  @media (max-width:700px) {
+    .sheet-grid { grid-template-columns:1fr; }
+    .identity-row { grid-template-columns:1fr; }
+    .sheet-class-badge { position:static; transform:none; margin-top:6px; display:inline-block; }
   }
 </style>
 </head>
@@ -177,7 +265,7 @@
 
 <header>
   <h1>Mutant Crawl Classics</h1>
-  <p class="sub">Character Sheet // Terra A.D.</p>
+  <p class="sub">Character Record Sheet // Terra A.D.</p>
 </header>
 
 <nav>
@@ -209,131 +297,240 @@
 
 <div class="sheet" id="sheet">
 
-  <div class="class-banner" id="classBanner">
-    <div class="class-icon" id="classIcon"></div>
-    <h2 id="className"></h2>
-    <div class="class-role" id="classRole"></div>
+  <!-- Title bar -->
+  <div class="sheet-title" id="sheetTitle">
+    <h2>Mutant Crawl Classics Character Record Sheet</h2>
+    <span class="sheet-class-badge" id="classBadge"></span>
   </div>
 
-  <!-- Identity -->
-  <div class="section">
-    <h3>Identity</h3>
-    <div class="field-row">
-      <div class="field" style="flex:2;"><label>Character Name</label><input type="text" data-field="charName" placeholder="What do they call you?"></div>
-      <div class="field"><label>Level</label><input type="number" data-field="level" placeholder="1" min="0" max="10"></div>
-      <div class="field"><label>XP</label><input type="number" data-field="xp" placeholder="0" min="0"></div>
-    </div>
-    <div class="field-row">
-      <div class="field"><label>Title</label><input type="text" data-field="title" placeholder="Title / Rank"></div>
-      <div class="field"><label>Alignment</label>
-        <select data-field="alignment">
-          <option value="">-- Choose --</option>
-          <option value="lawful">Lawful</option>
-          <option value="neutral">Neutral</option>
-          <option value="chaotic">Chaotic</option>
-        </select>
+  <!-- Identity row -->
+  <div class="identity-row">
+    <div class="box">
+      <div class="field" style="flex:2;min-width:160px;">
+        <label>Character Name</label>
+        <input type="text" data-field="charName" placeholder="Name">
       </div>
-      <div class="field"><label>Archaic Alignment</label><input type="text" data-field="archaicAlignment" placeholder="Optional"></div>
+      <div class="field" style="flex:2;min-width:140px;">
+        <label>Class / Title</label>
+        <input type="text" data-field="classTitle" placeholder="Class / Title" readonly id="classTitleField">
+      </div>
+      <div class="field" style="flex:1;min-width:60px;">
+        <label>Level</label>
+        <input type="number" data-field="level" placeholder="1" min="0" max="10">
+      </div>
+      <div class="field" style="flex:1;min-width:60px;">
+        <label>XP</label>
+        <input type="number" data-field="xp" placeholder="0" min="0">
+      </div>
+      <div class="circle-stats">
+        <div class="circle-stat">
+          <label>AC</label>
+          <input type="text" data-field="ac" placeholder="10">
+        </div>
+        <div class="circle-stat">
+          <label>Hit Points</label>
+          <input type="text" data-field="hp" placeholder="--">
+        </div>
+      </div>
+      <div class="field" style="flex:1;min-width:200px;">
+        <label>Archaic Alignment</label>
+        <input type="text" data-field="archaicAlignment" placeholder="Alignment">
+      </div>
     </div>
-  </div>
 
-  <!-- Ability Scores -->
-  <div class="section">
-    <h3>Ability Scores</h3>
-    <div class="abilities">
-      <div class="ability">
-        <label>Strength</label>
-        <input type="number" data-field="str" placeholder="--" min="1" max="24">
-        <div class="mod" id="strMod"></div>
-      </div>
-      <div class="ability">
-        <label>Agility</label>
-        <input type="number" data-field="agi" placeholder="--" min="1" max="24">
-        <div class="mod" id="agiMod"></div>
-      </div>
-      <div class="ability">
-        <label>Stamina</label>
-        <input type="number" data-field="sta" placeholder="--" min="1" max="24">
-        <div class="mod" id="staMod"></div>
-      </div>
-      <div class="ability">
-        <label>Personality</label>
-        <input type="number" data-field="per" placeholder="--" min="1" max="24">
-        <div class="mod" id="perMod"></div>
-      </div>
-      <div class="ability">
-        <label>Intelligence</label>
-        <input type="number" data-field="int" placeholder="--" min="1" max="24">
-        <div class="mod" id="intMod"></div>
-      </div>
-      <div class="ability">
-        <label>Luck</label>
-        <input type="number" data-field="luk" placeholder="--" min="1" max="24">
-        <div class="mod" id="lukMod"></div>
+    <div class="box" style="display:flex;flex-direction:column;gap:10px;">
+      <!-- Attack table (top-right of PDF) -->
+      <div class="box-header">Attack Modifiers</div>
+      <div class="attack-grid">
+        <div class="attack-cell"><label>Base Speed</label><input type="text" data-field="baseSpeed" placeholder="30'"></div>
+        <div class="attack-cell"><label>Melee Attack</label><input type="text" data-field="meleeAttack" placeholder="+0"></div>
+        <div class="attack-cell"><label>Melee Damage</label><input type="text" data-field="meleeDamage" placeholder="+0"></div>
+        <div class="attack-cell"><label>Missile Attack</label><input type="text" data-field="missileAttack" placeholder="+0"></div>
+        <div class="attack-cell"><label>Missile Damage</label><input type="text" data-field="missileDamage" placeholder="+0"></div>
+        <div class="attack-cell"><label>Reflex Save</label><input type="text" data-field="refSave" placeholder="+0"></div>
+        <div class="attack-cell"><label>Fortitude Save</label><input type="text" data-field="fortSave" placeholder="+0"></div>
+        <div class="attack-cell"><label>Will Save</label><input type="text" data-field="willSave" placeholder="+0"></div>
       </div>
     </div>
   </div>
 
-  <!-- Combat -->
-  <div class="section">
-    <h3>Combat</h3>
-    <div class="combat-stats">
-      <div class="combat-stat"><label>HP</label><input type="number" data-field="hp" placeholder="--"></div>
-      <div class="combat-stat"><label>Max HP</label><input type="number" data-field="maxHp" placeholder="--"></div>
-      <div class="combat-stat"><label>AC</label><input type="number" data-field="ac" placeholder="10"></div>
-      <div class="combat-stat"><label>Initiative</label><input type="text" data-field="init" placeholder="+0"></div>
-      <div class="combat-stat"><label>Attack Bonus</label><input type="text" data-field="attackBonus" placeholder="+0"></div>
-      <div class="combat-stat"><label>Crit Die</label><input type="text" data-field="critDie" placeholder="1d8"></div>
-      <div class="combat-stat"><label>Crit Table</label><input type="text" data-field="critTable" placeholder="III"></div>
-      <div class="combat-stat"><label>Ref Save</label><input type="text" data-field="refSave" placeholder="+0"></div>
-      <div class="combat-stat"><label>Fort Save</label><input type="text" data-field="fortSave" placeholder="+0"></div>
-      <div class="combat-stat"><label>Will Save</label><input type="text" data-field="willSave" placeholder="+0"></div>
+  <!-- Main two-column layout -->
+  <div class="sheet-grid">
+
+    <!-- LEFT COLUMN -->
+    <div class="left-col">
+
+      <!-- Ability Scores -->
+      <div class="box">
+        <div class="box-header">Ability Scores</div>
+        <div class="ability-list">
+          <div class="ability-row">
+            <input type="text" class="ab-score" data-field="str" placeholder="--">
+            <span class="ab-name">Strength</span>
+            <div><div class="ab-mod-label">Mod</div><input type="text" class="ab-mod" data-field="strMod" placeholder="+0"></div>
+          </div>
+          <div class="ability-row">
+            <input type="text" class="ab-score" data-field="agi" placeholder="--">
+            <span class="ab-name">Agility</span>
+            <div><div class="ab-mod-label">Mod</div><input type="text" class="ab-mod" data-field="agiMod" placeholder="+0"></div>
+          </div>
+          <div class="ability-row">
+            <input type="text" class="ab-score" data-field="sta" placeholder="--">
+            <span class="ab-name">Stamina</span>
+            <div><div class="ab-mod-label">Mod</div><input type="text" class="ab-mod" data-field="staMod" placeholder="+0"></div>
+          </div>
+          <div class="ability-row">
+            <input type="text" class="ab-score" data-field="per" placeholder="--">
+            <span class="ab-name">Personality</span>
+            <div><div class="ab-mod-label">Mod</div><input type="text" class="ab-mod" data-field="perMod" placeholder="+0"></div>
+          </div>
+          <div class="ability-row">
+            <input type="text" class="ab-score" data-field="int" placeholder="--">
+            <span class="ab-name">Intelligence</span>
+            <div><div class="ab-mod-label">Mod</div><input type="text" class="ab-mod" data-field="intMod" placeholder="+0"></div>
+          </div>
+          <div class="ability-row">
+            <input type="text" class="ab-score" data-field="luk" placeholder="--">
+            <span class="ab-name">Luck</span>
+            <div><div class="ab-mod-label">Mod</div><input type="text" class="ab-mod" data-field="lukMod" placeholder="+0"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Combat Basics -->
+      <div class="box">
+        <div class="box-header">Combat Basics</div>
+        <div class="combat-grid">
+          <div class="combat-field"><label>Initiative</label><input type="text" data-field="initiative" placeholder="+0"></div>
+          <div class="combat-field"><label>Action Dice</label><input type="text" data-field="actionDice" placeholder="1d20"></div>
+          <div class="combat-field"><label>Crit Die</label><input type="text" data-field="critDie" placeholder="1d8"></div>
+          <div class="combat-field"><label>Crit Table</label><input type="text" data-field="critTable" placeholder="III"></div>
+        </div>
+      </div>
+
+      <!-- Artifact Check -->
+      <div class="box">
+        <div class="box-header">Artifact Check</div>
+        <div class="artifact-check-row">
+          <div class="circle-stat">
+            <label>Max Tech Level</label>
+            <input type="text" data-field="maxTechLevel" placeholder="--">
+          </div>
+        </div>
+      </div>
+
+      <!-- Birth Sign / Lucky Roll -->
+      <div class="box birth-sign">
+        <div class="box-header">Birth Sign / Lucky Roll</div>
+        <div class="field">
+          <textarea data-field="birthSign" placeholder="Birth sign and lucky roll..."></textarea>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RIGHT COLUMN -->
+    <div class="right-col">
+
+      <!-- Weapons & Armor -->
+      <div class="box">
+        <div class="box-header">Weapons &amp; Armor</div>
+        <table class="weapons-table">
+          <thead>
+            <tr><th style="width:40%;">Weapon / Armor</th><th>Damage</th><th>Range</th><th>Notes</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><input type="text" data-field="weapon1" placeholder="Weapon name"></td>
+              <td><input type="text" data-field="weapon1Dmg" placeholder="1d6"></td>
+              <td><input type="text" data-field="weapon1Range" placeholder="Melee"></td>
+              <td><input type="text" data-field="weapon1Notes" placeholder=""></td>
+            </tr>
+            <tr>
+              <td><input type="text" data-field="weapon2" placeholder=""></td>
+              <td><input type="text" data-field="weapon2Dmg" placeholder=""></td>
+              <td><input type="text" data-field="weapon2Range" placeholder=""></td>
+              <td><input type="text" data-field="weapon2Notes" placeholder=""></td>
+            </tr>
+            <tr>
+              <td><input type="text" data-field="weapon3" placeholder=""></td>
+              <td><input type="text" data-field="weapon3Dmg" placeholder=""></td>
+              <td><input type="text" data-field="weapon3Range" placeholder=""></td>
+              <td><input type="text" data-field="weapon3Notes" placeholder=""></td>
+            </tr>
+            <tr>
+              <td><input type="text" data-field="weapon4" placeholder=""></td>
+              <td><input type="text" data-field="weapon4Dmg" placeholder=""></td>
+              <td><input type="text" data-field="weapon4Range" placeholder=""></td>
+              <td><input type="text" data-field="weapon4Notes" placeholder=""></td>
+            </tr>
+            <tr>
+              <td><input type="text" data-field="armor1" placeholder="Armor"></td>
+              <td><input type="text" data-field="armor1AC" placeholder="AC bonus"></td>
+              <td><input type="text" data-field="armor1Penalty" placeholder="Penalty"></td>
+              <td><input type="text" data-field="armor1Notes" placeholder=""></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Equipment & Treasure -->
+      <div class="box">
+        <div class="box-header">Equipment &amp; Treasure</div>
+        <div class="field">
+          <textarea data-field="equipment" placeholder="Gear, rations, domars, ancient tech..." rows="5"></textarea>
+        </div>
+      </div>
+
+      <!-- Class Abilities (Sentinel, Rover, Healer, Manimal, Plantient) -->
+      <div class="box" id="abilitiesSection">
+        <div class="box-header" id="abilitiesHeader">Class Abilities</div>
+        <div class="field">
+          <textarea data-field="classAbilities" placeholder="Class-specific abilities..." rows="4"></textarea>
+        </div>
+      </div>
+
+      <!-- Mutations & Defects (Mutant, Manimal, Plantient) -->
+      <div class="box" id="mutationsSection" style="display:none;">
+        <div class="box-header">Mutations &amp; Defects</div>
+        <div class="list-header">
+          <span>Mutation</span>
+          <span class="lh-check">Check</span>
+          <span>Effect</span>
+          <span class="lh-remove"></span>
+        </div>
+        <div class="list-section" id="mutationList"></div>
+        <button class="add-btn" id="addMutation">+ Add Mutation</button>
+      </div>
+
+      <!-- Wetware Programs (Shaman only) -->
+      <div class="box" id="wetwareSection" style="display:none;">
+        <div class="box-header">Wetware Programs</div>
+        <div class="list-header">
+          <span>Wetware Program</span>
+          <span class="lh-check">Check</span>
+          <span>Effect</span>
+          <span class="lh-remove"></span>
+        </div>
+        <div class="list-section" id="wetwareList"></div>
+        <button class="add-btn" id="addWetware">+ Add Program</button>
+      </div>
+
+      <!-- Artifacts table (Sentinel, Rover, Healer, Shaman) -->
+      <div class="box" id="artifactsSection" style="display:none;">
+        <div class="box-header">Artifacts</div>
+        <div class="list-header">
+          <span>Artifact</span>
+          <span class="lh-check">Check</span>
+          <span>Effect</span>
+          <span class="lh-remove"></span>
+        </div>
+        <div class="list-section" id="artifactList"></div>
+        <button class="add-btn" id="addArtifact">+ Add Artifact</button>
+      </div>
+
     </div>
   </div>
-
-  <!-- Mutations -->
-  <div class="section" id="mutationsSection">
-    <h3>Mutations</h3>
-    <div class="mutation-list" id="mutationList"></div>
-    <button class="add-btn" id="addMutation">+ Add Mutation</button>
-  </div>
-
-  <!-- Weapons -->
-  <div class="section">
-    <h3>Weapons</h3>
-    <div class="field-row">
-      <div class="field" style="flex:2;"><label>Weapon 1</label><input type="text" data-field="weapon1" placeholder="Weapon name"></div>
-      <div class="field"><label>Damage</label><input type="text" data-field="weapon1Dmg" placeholder="1d6"></div>
-      <div class="field"><label>Range</label><input type="text" data-field="weapon1Range" placeholder="Melee"></div>
-    </div>
-    <div class="field-row">
-      <div class="field" style="flex:2;"><label>Weapon 2</label><input type="text" data-field="weapon2" placeholder="Weapon name"></div>
-      <div class="field"><label>Damage</label><input type="text" data-field="weapon2Dmg" placeholder="1d6"></div>
-      <div class="field"><label>Range</label><input type="text" data-field="weapon2Range" placeholder="Melee"></div>
-    </div>
-    <div class="field-row">
-      <div class="field" style="flex:2;"><label>Weapon 3</label><input type="text" data-field="weapon3" placeholder="Weapon name"></div>
-      <div class="field"><label>Damage</label><input type="text" data-field="weapon3Dmg" placeholder="1d6"></div>
-      <div class="field"><label>Range</label><input type="text" data-field="weapon3Range" placeholder="Melee"></div>
-    </div>
-  </div>
-
-  <!-- Artifacts -->
-  <div class="section">
-    <h3>Artifacts &amp; Equipment</h3>
-    <div class="field">
-      <textarea data-field="equipment" placeholder="List your gear, artifacts, and ancient tech..." rows="5"></textarea>
-    </div>
-  </div>
-
-  <!-- Notes -->
-  <div class="section">
-    <h3>Notes &amp; Backstory</h3>
-    <div class="field">
-      <textarea data-field="notes" placeholder="Backstory, allies, enemies, goals..." rows="6"></textarea>
-    </div>
-  </div>
-
 </div>
 
 <footer>Terra A.D. // Mutant Crawl Classics RPG // Goodman Games</footer>
@@ -360,17 +557,18 @@
   var db = firebase.database();
   var provider = new firebase.auth.GoogleAuthProvider();
 
-  var CLASS_INFO = {
-    sentinel:  { icon: '\u2694\uFE0F', name: 'Sentinel',  role: 'Warrior of the Wastes',       hasMutations: false },
-    rover:     { icon: '\uD83D\uDDE1\uFE0F', name: 'Rover',     role: 'Scout & Scavenger',          hasMutations: false },
-    shaman:    { icon: '\uD83D\uDD2E', name: 'Shaman',    role: 'Keeper of Ancient Knowledge', hasMutations: false },
-    healer:    { icon: '\uD83D\uDC89', name: 'Healer',    role: 'The Medic',                   hasMutations: false },
-    mutant:    { icon: '\u2622\uFE0F', name: 'Mutant',    role: 'Unpredictable & Unique',      hasMutations: true },
-    manimal:   { icon: '\uD83D\uDC3E', name: 'Manimal',   role: 'Human-Animal Hybrid',         hasMutations: true },
-    plantient: { icon: '\uD83C\uDF3F', name: 'Plantient', role: 'Sentient Plant Creature',     hasMutations: true }
+  // Class config matching the PDFs
+  var CLASS_CONFIG = {
+    sentinel:  { name:'Sentinel',  badge:'Pure Strain Human - Sentinel',  icon:'\u2694\uFE0F', hasMutations:false, hasWetware:false, hasArtifacts:true,  abilitiesLabel:'Sentinel Abilities' },
+    rover:     { name:'Rover',     badge:'Pure Strain Human - Rover',     icon:'\uD83D\uDDE1\uFE0F', hasMutations:false, hasWetware:false, hasArtifacts:true,  abilitiesLabel:'Rover Abilities' },
+    shaman:    { name:'Shaman',    badge:'Pure Strain Human - Shaman',    icon:'\uD83D\uDD2E', hasMutations:false, hasWetware:true,  hasArtifacts:true,  abilitiesLabel:'Shaman Abilities' },
+    healer:    { name:'Healer',    badge:'Pure Strain Human - Healer',    icon:'\uD83D\uDC89', hasMutations:false, hasWetware:false, hasArtifacts:true,  abilitiesLabel:'Healer Abilities' },
+    mutant:    { name:'Mutant',    badge:'Mutant',                        icon:'\u2622\uFE0F', hasMutations:true,  hasWetware:false, hasArtifacts:false, abilitiesLabel:'Mutant Abilities' },
+    manimal:   { name:'Manimal',   badge:'Manimal',                       icon:'\uD83D\uDC3E', hasMutations:true,  hasWetware:false, hasArtifacts:false, abilitiesLabel:'Manimal Abilities' },
+    plantient: { name:'Plantient', badge:'Plantient',                     icon:'\uD83C\uDF3F', hasMutations:true,  hasWetware:false, hasArtifacts:false, abilitiesLabel:'Plantient Abilities' }
   };
 
-  // DOM
+  // DOM refs
   var signedOutDiv = document.getElementById('signedOut');
   var signedInDiv = document.getElementById('signedIn');
   var signInBtn = document.getElementById('signInBtn');
@@ -386,37 +584,16 @@
   var currentClass = null;
   var sheetRef = null;
   var saveTimeout = null;
+
+  // Dynamic lists
   var mutations = [];
-
-  // Ability modifier table (DCC/MCC)
-  function getMod(score) {
-    score = parseInt(score);
-    if (isNaN(score)) return '';
-    if (score <= 3) return '-3';
-    if (score <= 5) return '-2';
-    if (score <= 8) return '-1';
-    if (score <= 12) return '+0';
-    if (score <= 15) return '+1';
-    if (score <= 17) return '+2';
-    if (score <= 20) return '+3';
-    return '+4';
-  }
-
-  function updateMods() {
-    ['str','agi','sta','per','int','luk'].forEach(function(ab) {
-      var input = document.querySelector('[data-field="' + ab + '"]');
-      var modEl = document.getElementById(ab + 'Mod');
-      if (input && modEl) {
-        var mod = getMod(input.value);
-        modEl.textContent = mod ? 'Mod: ' + mod : '';
-      }
-    });
-  }
+  var wetware = [];
+  var artifacts = [];
 
   // Auth
   auth.onAuthStateChanged(function(user) {
     if (user) {
-      currentUser = { uid: user.uid, displayName: user.displayName, photoURL: user.photoURL };
+      currentUser = { uid:user.uid, displayName:user.displayName, photoURL:user.photoURL };
       signedOutDiv.style.display = 'none';
       signedInDiv.style.display = 'block';
       userNameEl.textContent = user.displayName;
@@ -433,11 +610,9 @@
 
   signInBtn.addEventListener('click', function() {
     auth.signInWithPopup(provider).catch(function(err) {
-      console.error('Sign-in error:', err);
       showStatus('Sign-in failed. Try again.', 'error');
     });
   });
-
   signOutBtn.addEventListener('click', function() { auth.signOut(); });
 
   function showStatus(msg, type) {
@@ -445,138 +620,142 @@
     statusMsg.className = 'status-msg ' + type;
     setTimeout(function() { statusMsg.className = 'status-msg'; }, 3000);
   }
-
   function showSave(state) {
     saveIndicator.textContent = state === 'saving' ? 'Saving...' : 'Saved';
     saveIndicator.className = 'save-indicator ' + state;
-    if (state === 'saved') {
-      setTimeout(function() { saveIndicator.className = 'save-indicator'; }, 1500);
-    }
+    if (state === 'saved') setTimeout(function() { saveIndicator.className = 'save-indicator'; }, 1500);
   }
 
-  // Find what class this user picked
   function loadPlayerClass() {
-    db.ref('picks').once('value', function(snapshot) {
-      var picks = snapshot.val() || {};
+    db.ref('picks').once('value', function(snap) {
+      var picks = snap.val() || {};
       currentClass = null;
-
       Object.keys(picks).forEach(function(cls) {
-        if (picks[cls].uid === currentUser.uid) {
-          currentClass = cls;
-        }
+        if (picks[cls].uid === currentUser.uid) currentClass = cls;
       });
-
       if (!currentClass) {
         sheetDiv.style.display = 'none';
         noClassDiv.style.display = 'block';
         return;
       }
-
       noClassDiv.style.display = 'none';
       setupSheet();
     });
   }
 
   function setupSheet() {
-    var info = CLASS_INFO[currentClass];
-    if (!info) return;
+    var cfg = CLASS_CONFIG[currentClass];
+    if (!cfg) return;
 
-    // Set banner
-    var banner = document.getElementById('classBanner');
-    banner.className = 'class-banner ' + currentClass;
-    document.getElementById('classIcon').textContent = info.icon;
-    document.getElementById('className').textContent = info.name;
-    document.getElementById('classRole').textContent = info.role;
+    // Apply class color
+    var title = document.getElementById('sheetTitle');
+    title.className = 'sheet-title ' + currentClass;
+    document.getElementById('classBadge').textContent = cfg.icon + ' ' + cfg.badge;
 
-    // Show/hide mutations section
-    document.getElementById('mutationsSection').style.display = info.hasMutations ? 'block' : 'none';
+    // Set class/title field
+    document.getElementById('classTitleField').value = cfg.name;
+
+    // Show/hide class-specific sections
+    document.getElementById('mutationsSection').style.display = cfg.hasMutations ? 'block' : 'none';
+    document.getElementById('wetwareSection').style.display = cfg.hasWetware ? 'block' : 'none';
+    document.getElementById('artifactsSection').style.display = cfg.hasArtifacts ? 'block' : 'none';
+    document.getElementById('abilitiesHeader').textContent = cfg.abilitiesLabel;
 
     sheetDiv.style.display = 'block';
-
-    // Set up sheet ref and load data
     sheetRef = db.ref('sheets/' + currentUser.uid);
     loadSheet();
   }
 
   function loadSheet() {
-    sheetRef.once('value', function(snapshot) {
-      var data = snapshot.val() || {};
-
-      // Populate all simple fields
+    sheetRef.once('value', function(snap) {
+      var data = snap.val() || {};
       document.querySelectorAll('[data-field]').forEach(function(el) {
         var key = el.getAttribute('data-field');
-        if (data[key] !== undefined && data[key] !== null) {
-          el.value = data[key];
-        }
+        if (key === 'classTitle') return; // Don't overwrite class name
+        if (data[key] !== undefined && data[key] !== null) el.value = data[key];
       });
-
-      // Load mutations
       mutations = data.mutations || [];
-      renderMutations();
-      updateMods();
-    });
-
-    // Listen for real-time updates (e.g. if GM edits)
-    sheetRef.on('value', function(snapshot) {
-      // We only use this for the save indicator confirmation
+      wetware = data.wetware || [];
+      artifacts = data.artifacts || [];
+      renderList('mutationList', mutations);
+      renderList('wetwareList', wetware);
+      renderList('artifactList', artifacts);
     });
   }
 
-  function renderMutations() {
-    var list = document.getElementById('mutationList');
-    list.innerHTML = '';
-    mutations.forEach(function(mut, i) {
+  // Render a dynamic list (mutations, wetware, or artifacts)
+  function renderList(containerId, items) {
+    var container = document.getElementById(containerId);
+    container.innerHTML = '';
+    items.forEach(function(item, i) {
       var entry = document.createElement('div');
-      entry.className = 'mutation-entry';
-      entry.innerHTML = '<input type="text" class="mutation-input" placeholder="Mutation name & effect..." value="' +
-        escapeAttr(mut) + '" data-mutation-index="' + i + '">' +
-        '<button class="remove-btn" data-mutation-remove="' + i + '">&times;</button>';
-      list.appendChild(entry);
+      entry.className = 'list-entry';
+      var name = (typeof item === 'object') ? (item.name || '') : item;
+      var check = (typeof item === 'object') ? (item.check || '') : '';
+      var effect = (typeof item === 'object') ? (item.effect || '') : '';
+      entry.innerHTML =
+        '<input type="text" class="le-name" placeholder="Name" value="' + escapeAttr(name) + '" data-list="' + containerId + '" data-index="' + i + '" data-prop="name">' +
+        '<input type="text" class="le-check" placeholder="Check" value="' + escapeAttr(check) + '" data-list="' + containerId + '" data-index="' + i + '" data-prop="check">' +
+        '<input type="text" class="le-effect" placeholder="Effect" value="' + escapeAttr(effect) + '" data-list="' + containerId + '" data-index="' + i + '" data-prop="effect">' +
+        '<button class="remove-btn" data-list="' + containerId + '" data-remove="' + i + '">&times;</button>';
+      container.appendChild(entry);
     });
+    bindListEvents(containerId, items);
+  }
 
-    // Bind events
-    list.querySelectorAll('.mutation-input').forEach(function(input) {
+  function bindListEvents(containerId, items) {
+    var container = document.getElementById(containerId);
+    container.querySelectorAll('input').forEach(function(input) {
       input.addEventListener('input', function() {
-        var idx = parseInt(this.getAttribute('data-mutation-index'));
-        mutations[idx] = this.value;
+        var idx = parseInt(this.getAttribute('data-index'));
+        var prop = this.getAttribute('data-prop');
+        if (typeof items[idx] !== 'object') items[idx] = { name:'', check:'', effect:'' };
+        items[idx][prop] = this.value;
         scheduleSave();
       });
     });
-    list.querySelectorAll('.remove-btn').forEach(function(btn) {
+    container.querySelectorAll('.remove-btn').forEach(function(btn) {
       btn.addEventListener('click', function() {
-        var idx = parseInt(this.getAttribute('data-mutation-remove'));
-        mutations.splice(idx, 1);
-        renderMutations();
+        var idx = parseInt(this.getAttribute('data-remove'));
+        items.splice(idx, 1);
+        renderList(containerId, items);
         scheduleSave();
       });
     });
   }
 
-  function escapeAttr(str) {
-    return str.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-  }
+  function escapeAttr(s) { return s.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
-  // Add mutation button
+  // Add buttons
   document.getElementById('addMutation').addEventListener('click', function() {
-    mutations.push('');
-    renderMutations();
-    // Focus the new input
-    var inputs = document.querySelectorAll('.mutation-input');
-    if (inputs.length) inputs[inputs.length - 1].focus();
+    mutations.push({ name:'', check:'', effect:'' });
+    renderList('mutationList', mutations);
+    focusLast('mutationList');
+  });
+  document.getElementById('addWetware').addEventListener('click', function() {
+    wetware.push({ name:'', check:'', effect:'' });
+    renderList('wetwareList', wetware);
+    focusLast('wetwareList');
+  });
+  document.getElementById('addArtifact').addEventListener('click', function() {
+    artifacts.push({ name:'', check:'', effect:'' });
+    renderList('artifactList', artifacts);
+    focusLast('artifactList');
   });
 
-  // Auto-save on input
+  function focusLast(containerId) {
+    var inputs = document.getElementById(containerId).querySelectorAll('.le-name');
+    if (inputs.length) inputs[inputs.length - 1].focus();
+  }
+
+  // Auto-save
   document.addEventListener('input', function(e) {
-    if (e.target.hasAttribute('data-field')) {
+    if (e.target.hasAttribute('data-field') && e.target.getAttribute('data-field') !== 'classTitle') {
       scheduleSave();
-      // Update ability mods
-      if (['str','agi','sta','per','int','luk'].indexOf(e.target.getAttribute('data-field')) !== -1) {
-        updateMods();
-      }
     }
   });
   document.addEventListener('change', function(e) {
-    if (e.target.hasAttribute('data-field')) {
+    if (e.target.hasAttribute('data-field') && e.target.getAttribute('data-field') !== 'classTitle') {
       scheduleSave();
     }
   });
@@ -589,20 +768,20 @@
 
   function saveSheet() {
     if (!sheetRef) return;
-
     var data = { playerClass: currentClass };
-
     document.querySelectorAll('[data-field]').forEach(function(el) {
-      data[el.getAttribute('data-field')] = el.value;
+      var key = el.getAttribute('data-field');
+      if (key === 'classTitle') return;
+      data[key] = el.value;
     });
-
     data.mutations = mutations;
+    data.wetware = wetware;
+    data.artifacts = artifacts;
     data.lastUpdated = firebase.database.ServerValue.TIMESTAMP;
 
     sheetRef.set(data).then(function() {
       showSave('saved');
     }).catch(function(err) {
-      console.error('Save failed:', err);
       showStatus('Save failed!', 'error');
     });
   }
