@@ -2,7 +2,13 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#0d0d0d">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
 <title>MCC – Pick Your Class</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;600;700&display=swap');
@@ -11,70 +17,63 @@
   body {
     background:#0d0d0d;
     background-image:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,255,100,0.012) 2px,rgba(0,255,100,0.012) 4px);
-    color:#c8c8a0;
-    font-family:'Rajdhani',sans-serif;
-    font-size:17px;
-    line-height:1.6;
-    padding:40px 20px 80px;
+    color:#c8c8a0; font-family:'Rajdhani',sans-serif; font-size:16px; line-height:1.6;
+    padding:16px 12px 90px;
+    -webkit-tap-highlight-color:transparent;
   }
-  header { text-align:center; margin-bottom:20px; padding-bottom:30px; border-bottom:1px solid #3a3a2a; }
-  header h1 { font-family:'Share Tech Mono',monospace; font-size:2.2em; color:#d4a030; text-transform:uppercase; letter-spacing:4px; text-shadow:0 0 20px rgba(212,160,48,0.4); margin-bottom:8px; }
-  header .sub { color:#888870; font-size:1em; letter-spacing:2px; text-transform:uppercase; font-family:'Share Tech Mono',monospace; }
+  header { text-align:center; margin-bottom:16px; padding-bottom:16px; border-bottom:1px solid #3a3a2a; }
+  header h1 { font-family:'Share Tech Mono',monospace; font-size:1.4em; color:#d4a030; text-transform:uppercase; letter-spacing:3px; text-shadow:0 0 20px rgba(212,160,48,0.4); margin-bottom:4px; }
+  header .sub { color:#888870; font-size:0.8em; letter-spacing:2px; text-transform:uppercase; font-family:'Share Tech Mono',monospace; }
 
-  /* Nav */
-  nav { max-width:1100px; margin:0 auto 30px; display:flex; gap:12px; justify-content:center; }
-  nav a { font-family:'Share Tech Mono',monospace; font-size:0.85em; color:#d4a030; text-decoration:none; text-transform:uppercase; letter-spacing:2px; padding:8px 20px; border:1px solid #3a3010; border-radius:3px; transition:background 0.2s, color 0.2s; }
-  nav a:hover, nav a.active { background:#d4a030; color:#0d0d0d; }
-
-  /* Auth section */
-  .auth-section { max-width:500px; margin:0 auto 40px; text-align:center; }
+  /* Auth */
+  .auth-section { max-width:500px; margin:0 auto 20px; text-align:center; }
   .sign-in-btn {
     font-family:'Share Tech Mono',monospace; font-size:0.9em; text-transform:uppercase; letter-spacing:1px;
-    background:#111108; color:#d4a030; border:1px solid #3a3010; padding:12px 28px; border-radius:4px;
-    cursor:pointer; transition:background 0.2s, border-color 0.2s;
+    background:#111108; color:#d4a030; border:1px solid #3a3010; padding:14px 28px; border-radius:4px;
+    cursor:pointer; transition:background 0.2s; min-height:48px;
+    -webkit-tap-highlight-color:transparent;
   }
-  .sign-in-btn:hover { background:#1a1a10; border-color:#d4a030; }
-  .user-info {
-    display:flex; align-items:center; justify-content:center; gap:12px;
-    font-family:'Share Tech Mono',monospace;
-  }
-  .user-info img { width:32px; height:32px; border-radius:50%; border:2px solid #d4a030; }
-  .user-info .user-name { color:#d4a030; font-size:1em; }
+  .sign-in-btn:active { background:#1a1a10; border-color:#d4a030; }
+  .user-info { display:flex; align-items:center; justify-content:center; gap:10px; font-family:'Share Tech Mono',monospace; flex-wrap:wrap; }
+  .user-info img { width:28px; height:28px; border-radius:50%; border:2px solid #d4a030; }
+  .user-info .user-name { color:#d4a030; font-size:0.9em; }
   .sign-out-btn {
-    font-family:'Share Tech Mono',monospace; font-size:0.7em; text-transform:uppercase; letter-spacing:1px;
-    background:none; color:#555540; border:1px solid #2a2a1a; padding:4px 12px; border-radius:3px;
-    cursor:pointer; transition:color 0.2s;
+    font-family:'Share Tech Mono',monospace; font-size:0.7em; text-transform:uppercase;
+    background:none; color:#555540; border:1px solid #2a2a1a; padding:6px 14px; border-radius:3px;
+    cursor:pointer; min-height:36px;
   }
-  .sign-out-btn:hover { color:#e06030; border-color:#e06030; }
-  .auth-prompt { font-family:'Share Tech Mono',monospace; font-size:0.85em; color:#888870; text-transform:uppercase; letter-spacing:2px; margin-bottom:14px; }
+  .sign-out-btn:active { color:#e06030; border-color:#e06030; }
+  .auth-prompt { font-family:'Share Tech Mono',monospace; font-size:0.8em; color:#888870; text-transform:uppercase; letter-spacing:2px; margin-bottom:12px; }
 
-  /* Class grid */
-  .pick-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:16px; max-width:1100px; margin:0 auto; }
+  /* Pick grid — 2 columns on mobile */
+  .pick-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; max-width:1100px; margin:0 auto; }
 
   .pick-card {
     background:#111108; border:1px solid #2a2a1a; border-top:3px solid var(--accent);
-    border-radius:6px; padding:20px; text-align:center; cursor:pointer;
-    transition:transform 0.2s, box-shadow 0.2s, border-color 0.2s;
-    position:relative;
+    border-radius:6px; padding:14px 10px; text-align:center; cursor:pointer;
+    transition:transform 0.15s, box-shadow 0.15s; position:relative;
+    -webkit-tap-highlight-color:transparent;
   }
-  .pick-card:hover { transform:translateY(-3px); box-shadow:0 8px 30px rgba(0,0,0,0.6); }
-  .pick-card.claimed { border-color:var(--accent); box-shadow:0 0 20px rgba(var(--accent-rgb),0.3); }
-  .pick-card.claimed-by-me { border-color:var(--accent); box-shadow:0 0 25px rgba(var(--accent-rgb),0.5); }
-  .pick-card .icon { font-size:2.5em; margin-bottom:8px; }
-  .pick-card h3 { font-family:'Share Tech Mono',monospace; color:var(--accent); text-transform:uppercase; letter-spacing:2px; font-size:1.1em; margin-bottom:4px; }
-  .pick-card .card-role { font-size:0.75em; color:#555540; font-family:'Share Tech Mono',monospace; text-transform:uppercase; letter-spacing:1px; margin-bottom:12px; }
+  .pick-card:active { transform:scale(0.96); }
+  .pick-card.claimed { border-color:var(--accent); box-shadow:0 0 15px rgba(var(--accent-rgb),0.3); }
+  .pick-card.claimed-by-me { box-shadow:0 0 20px rgba(var(--accent-rgb),0.5); }
+  .pick-card .icon { font-size:2em; margin-bottom:4px; }
+  .pick-card h3 { font-family:'Share Tech Mono',monospace; color:var(--accent); text-transform:uppercase; letter-spacing:1px; font-size:0.85em; margin-bottom:2px; }
+  .pick-card .card-role { font-size:0.6em; color:#555540; font-family:'Share Tech Mono',monospace; text-transform:uppercase; letter-spacing:1px; margin-bottom:8px; }
   .pick-card .claimed-by {
-    font-family:'Share Tech Mono',monospace; font-size:0.8em; color:var(--accent);
+    font-family:'Share Tech Mono',monospace; font-size:0.7em; color:var(--accent);
     background:rgba(var(--accent-rgb),0.1); border:1px solid rgba(var(--accent-rgb),0.3);
-    padding:6px 12px; border-radius:3px; margin-top:10px; display:none;
+    padding:4px 8px; border-radius:3px; margin-top:8px; display:none;
+    word-break:break-word;
   }
   .pick-card.claimed .claimed-by { display:block; }
   .pick-card .pick-btn {
-    font-family:'Share Tech Mono',monospace; font-size:0.8em; text-transform:uppercase; letter-spacing:1px;
+    font-family:'Share Tech Mono',monospace; font-size:0.75em; text-transform:uppercase; letter-spacing:1px;
     background:rgba(var(--accent-rgb),0.15); color:var(--accent); border:1px solid rgba(var(--accent-rgb),0.4);
-    padding:8px 20px; border-radius:3px; cursor:pointer; margin-top:10px; transition:background 0.2s;
+    padding:10px 16px; border-radius:3px; cursor:pointer; margin-top:8px; transition:background 0.2s;
+    min-height:40px; width:100%;
   }
-  .pick-card .pick-btn:hover { background:rgba(var(--accent-rgb),0.3); }
+  .pick-card .pick-btn:active { background:rgba(var(--accent-rgb),0.35); }
   .pick-card.claimed .pick-btn { display:none; }
 
   .sentinel  { --accent:#e06030; --accent-rgb:224,96,48; }
@@ -85,27 +84,63 @@
   .manimal   { --accent:#d07030; --accent-rgb:208,112,48; }
   .plantient { --accent:#60c040; --accent-rgb:96,192,64; }
 
-  /* Party roster */
-  .roster { max-width:1100px; margin:40px auto 0; }
-  .roster h3 { font-family:'Share Tech Mono',monospace; color:#d4a030; text-transform:uppercase; letter-spacing:2px; font-size:1em; margin-bottom:16px; text-align:center; }
-  .roster-list { display:flex; flex-wrap:wrap; gap:10px; justify-content:center; }
+  /* Roster */
+  .roster { max-width:1100px; margin:20px auto 0; }
+  .roster h3 { font-family:'Share Tech Mono',monospace; color:#d4a030; text-transform:uppercase; letter-spacing:2px; font-size:0.85em; margin-bottom:10px; text-align:center; }
+  .roster-list { display:flex; flex-wrap:wrap; gap:8px; justify-content:center; }
   .roster-entry {
-    font-family:'Share Tech Mono',monospace; font-size:0.85em; padding:8px 16px;
+    font-family:'Share Tech Mono',monospace; font-size:0.78em; padding:6px 12px;
     background:#111108; border:1px solid #2a2a1a; border-radius:4px; border-left:3px solid var(--accent);
   }
   .roster-entry .r-name { color:#c8c8a0; }
-  .roster-entry .r-class { color:var(--accent); text-transform:uppercase; font-size:0.85em; margin-left:6px; }
+  .roster-entry .r-class { color:var(--accent); text-transform:uppercase; font-size:0.85em; margin-left:4px; }
 
-  /* Status messages */
+  /* Status */
   .status-msg {
-    max-width:500px; margin:0 auto 20px; text-align:center; font-family:'Share Tech Mono',monospace;
-    font-size:0.85em; padding:10px; border-radius:4px; display:none;
+    max-width:500px; margin:0 auto 14px; text-align:center; font-family:'Share Tech Mono',monospace;
+    font-size:0.8em; padding:10px; border-radius:4px; display:none;
   }
   .status-msg.error { display:block; background:#1a0800; border:1px solid #4a1500; color:#e06030; }
   .status-msg.success { display:block; background:#001a08; border:1px solid #004a15; color:#50b080; }
   .status-msg.info { display:block; background:#110e00; border:1px solid #3a3010; color:#d4a030; }
 
-  footer { text-align:center; margin-top:50px; font-family:'Share Tech Mono',monospace; font-size:0.75em; color:#444430; letter-spacing:2px; text-transform:uppercase; }
+  footer { text-align:center; margin-top:30px; font-family:'Share Tech Mono',monospace; font-size:0.7em; color:#444430; letter-spacing:2px; text-transform:uppercase; }
+
+  /* Bottom nav */
+  .bottom-nav {
+    position:fixed; bottom:0; left:0; right:0; z-index:999;
+    background:#0d0d0d; border-top:1px solid #2a2a1a;
+    display:flex; justify-content:space-around; align-items:center;
+    padding:6px 0; padding-bottom:max(6px, env(safe-area-inset-bottom));
+  }
+  .bottom-nav a {
+    display:flex; flex-direction:column; align-items:center; gap:2px;
+    text-decoration:none; color:#555540; font-family:'Share Tech Mono',monospace;
+    font-size:0.6em; text-transform:uppercase; letter-spacing:1px;
+    padding:6px 12px; border-radius:6px; transition:color 0.2s;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .bottom-nav a .nav-icon { font-size:1.8em; }
+  .bottom-nav a.active { color:#d4a030; }
+  .bottom-nav a:active { background:rgba(212,160,48,0.1); }
+
+  /* Desktop */
+  @media (min-width:700px) {
+    body { padding:40px 20px 80px; font-size:17px; }
+    header h1 { font-size:2.2em; }
+    header { margin-bottom:20px; padding-bottom:30px; }
+    .pick-grid { grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:16px; }
+    .pick-card .icon { font-size:2.5em; }
+    .pick-card h3 { font-size:1.1em; }
+    .bottom-nav { display:none; }
+    .top-nav { display:flex; }
+  }
+
+  .top-nav {
+    max-width:1100px; margin:0 auto 30px; display:none; gap:12px; justify-content:center;
+  }
+  .top-nav a { font-family:'Share Tech Mono',monospace; font-size:0.85em; color:#d4a030; text-decoration:none; text-transform:uppercase; letter-spacing:2px; padding:8px 20px; border:1px solid #3a3010; border-radius:3px; }
+  .top-nav a:hover, .top-nav a.active { background:#d4a030; color:#0d0d0d; }
 </style>
 </head>
 <body>
@@ -115,7 +150,7 @@
   <p class="sub">Pick Your Class // Terra A.D.</p>
 </header>
 
-<nav>
+<nav class="top-nav">
   <a href="index.html">Classes</a>
   <a href="pick.html" class="active">Pick Your Class</a>
   <a href="sheet.html">Character Sheet</a>
@@ -141,55 +176,49 @@
   <div class="pick-card sentinel" data-class="sentinel">
     <div class="icon">&#x2694;&#xFE0F;</div>
     <h3>Sentinel</h3>
-    <div class="card-role">Warrior of the Wastes</div>
+    <div class="card-role">Warrior</div>
     <button class="pick-btn">Claim</button>
     <div class="claimed-by"></div>
   </div>
-
   <div class="pick-card rover" data-class="rover">
     <div class="icon">&#x1F5E1;&#xFE0F;</div>
     <h3>Rover</h3>
-    <div class="card-role">Scout &amp; Scavenger</div>
+    <div class="card-role">Scout</div>
     <button class="pick-btn">Claim</button>
     <div class="claimed-by"></div>
   </div>
-
   <div class="pick-card shaman" data-class="shaman">
     <div class="icon">&#x1F52E;</div>
     <h3>Shaman</h3>
-    <div class="card-role">Keeper of Ancient Knowledge</div>
+    <div class="card-role">Tech Mystic</div>
     <button class="pick-btn">Claim</button>
     <div class="claimed-by"></div>
   </div>
-
   <div class="pick-card healer" data-class="healer">
     <div class="icon">&#x1F489;</div>
     <h3>Healer</h3>
-    <div class="card-role">The Medic</div>
+    <div class="card-role">Medic</div>
     <button class="pick-btn">Claim</button>
     <div class="claimed-by"></div>
   </div>
-
   <div class="pick-card mutant" data-class="mutant">
     <div class="icon">&#x2622;&#xFE0F;</div>
     <h3>Mutant</h3>
-    <div class="card-role">Unpredictable &amp; Unique</div>
+    <div class="card-role">Wild Card</div>
     <button class="pick-btn">Claim</button>
     <div class="claimed-by"></div>
   </div>
-
   <div class="pick-card manimal" data-class="manimal">
     <div class="icon">&#x1F43E;</div>
     <h3>Manimal</h3>
-    <div class="card-role">Human-Animal Hybrid</div>
+    <div class="card-role">Hybrid</div>
     <button class="pick-btn">Claim</button>
     <div class="claimed-by"></div>
   </div>
-
   <div class="pick-card plantient" data-class="plantient">
     <div class="icon">&#x1F33F;</div>
     <h3>Plantient</h3>
-    <div class="card-role">Sentient Plant Creature</div>
+    <div class="card-role">Plant Creature</div>
     <button class="pick-btn">Claim</button>
     <div class="claimed-by"></div>
   </div>
@@ -200,16 +229,21 @@
   <div class="roster-list" id="rosterList"></div>
 </div>
 
-<footer>Terra A.D. // Mutant Crawl Classics RPG // Goodman Games</footer>
+<footer>Terra A.D. // MCC RPG // Goodman Games</footer>
 
-<!-- Firebase SDK -->
+<nav class="bottom-nav">
+  <a href="index.html"><span class="nav-icon">&#x2694;&#xFE0F;</span>Classes</a>
+  <a href="pick.html" class="active"><span class="nav-icon">&#x1F3AF;</span>Pick</a>
+  <a href="sheet.html"><span class="nav-icon">&#x1F4DC;</span>Sheet</a>
+</nav>
+
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
 
 <script>
 (function() {
-  const firebaseConfig = {
+  var firebaseConfig = {
     apiKey: "AIzaSyCWmlZK3ZN8Q-AlUmyf0g2hmJIs2Z02eGU",
     authDomain: "mcccampaign-e10e5.firebaseapp.com",
     databaseURL: "https://mcccampaign-e10e5-default-rtdb.firebaseio.com",
@@ -220,28 +254,26 @@
   };
 
   firebase.initializeApp(firebaseConfig);
-  const auth = firebase.auth();
-  const db = firebase.database();
-  const picksRef = db.ref('picks');
-  const provider = new firebase.auth.GoogleAuthProvider();
+  var auth = firebase.auth();
+  var db = firebase.database();
+  var picksRef = db.ref('picks');
+  var provider = new firebase.auth.GoogleAuthProvider();
 
-  // DOM
-  const signedOutDiv = document.getElementById('signedOut');
-  const signedInDiv = document.getElementById('signedIn');
-  const signInBtn = document.getElementById('signInBtn');
-  const signOutBtn = document.getElementById('signOutBtn');
-  const userPhoto = document.getElementById('userPhoto');
-  const userNameEl = document.getElementById('userName');
-  const statusMsg = document.getElementById('statusMsg');
-  const cards = document.querySelectorAll('.pick-card');
+  var signedOutDiv = document.getElementById('signedOut');
+  var signedInDiv = document.getElementById('signedIn');
+  var signInBtn = document.getElementById('signInBtn');
+  var signOutBtn = document.getElementById('signOutBtn');
+  var userPhoto = document.getElementById('userPhoto');
+  var userNameEl = document.getElementById('userName');
+  var statusMsg = document.getElementById('statusMsg');
+  var cards = document.querySelectorAll('.pick-card');
 
-  let currentUser = null; // { uid, displayName, photoURL }
-  let picks = {}; // { className: { uid, name, photo } }
+  var currentUser = null;
+  var picks = {};
 
-  // Auth state
   auth.onAuthStateChanged(function(user) {
     if (user) {
-      currentUser = { uid: user.uid, displayName: user.displayName, photoURL: user.photoURL };
+      currentUser = { uid:user.uid, displayName:user.displayName, photoURL:user.photoURL };
       signedOutDiv.style.display = 'none';
       signedInDiv.style.display = 'block';
       userNameEl.textContent = user.displayName;
@@ -256,29 +288,21 @@
 
   signInBtn.addEventListener('click', function() {
     auth.signInWithPopup(provider).catch(function(err) {
-      console.error('Sign-in error:', err);
       showStatus('Sign-in failed. Try again.', 'error');
     });
   });
+  signOutBtn.addEventListener('click', function() { auth.signOut(); });
 
-  signOutBtn.addEventListener('click', function() {
-    auth.signOut();
-  });
-
-  // Render picks on cards
   function render() {
     cards.forEach(function(card) {
       var cls = card.dataset.class;
       var claimedByEl = card.querySelector('.claimed-by');
       var pick = picks[cls];
-
       if (pick) {
         card.classList.add('claimed');
         if (currentUser && pick.uid === currentUser.uid) {
           card.classList.add('claimed-by-me');
-        } else {
-          card.classList.remove('claimed-by-me');
-        }
+        } else { card.classList.remove('claimed-by-me'); }
         claimedByEl.textContent = '\u26A1 ' + pick.name;
       } else {
         card.classList.remove('claimed', 'claimed-by-me');
@@ -292,65 +316,31 @@
     var rosterDiv = document.getElementById('roster');
     var rosterList = document.getElementById('rosterList');
     var entries = Object.entries(picks);
-
-    if (entries.length === 0) {
-      rosterDiv.style.display = 'none';
-      return;
-    }
+    if (entries.length === 0) { rosterDiv.style.display = 'none'; return; }
     rosterDiv.style.display = 'block';
-    rosterList.innerHTML = entries.map(function(entry) {
-      var cls = entry[0], pick = entry[1];
-      return '<div class="roster-entry ' + cls + '"><span class="r-name">' +
-        escapeHtml(pick.name) + '</span><span class="r-class"> // ' + cls + '</span></div>';
+    rosterList.innerHTML = entries.map(function(e) {
+      return '<div class="roster-entry ' + e[0] + '"><span class="r-name">' +
+        escapeHtml(e[1].name) + '</span><span class="r-class"> // ' + e[0] + '</span></div>';
     }).join('');
   }
 
-  function escapeHtml(str) {
-    var div = document.createElement('div');
-    div.textContent = str;
-    return div.innerHTML;
-  }
-
+  function escapeHtml(s) { var d=document.createElement('div'); d.textContent=s; return d.innerHTML; }
   function showStatus(msg, type) {
-    statusMsg.textContent = msg;
-    statusMsg.className = 'status-msg ' + type;
+    statusMsg.textContent = msg; statusMsg.className = 'status-msg ' + type;
     setTimeout(function() { statusMsg.className = 'status-msg'; }, 3000);
   }
 
-  // Claim handler
   cards.forEach(function(card) {
     card.querySelector('.pick-btn').addEventListener('click', function(e) {
       e.stopPropagation();
-      if (!currentUser) {
-        showStatus('Sign in first, wastelander.', 'error');
-        return;
-      }
-
+      if (!currentUser) { showStatus('Sign in first, wastelander.', 'error'); return; }
       var cls = card.dataset.class;
-
-      if (picks[cls]) {
-        showStatus(picks[cls].name + ' already claimed ' + cls + '!', 'error');
-        return;
-      }
-
-      // Check if player already picked a different class
-      var existing = Object.entries(picks).find(function(entry) {
-        return entry[1].uid === currentUser.uid;
-      });
-      if (existing) {
-        showStatus('You already claimed ' + existing[0] + '! Click it to unclaim.', 'error');
-        return;
-      }
-
-      picksRef.child(cls).set({
-        uid: currentUser.uid,
-        name: currentUser.displayName,
-        photo: currentUser.photoURL || ''
-      });
+      if (picks[cls]) { showStatus(picks[cls].name + ' already claimed ' + cls + '!', 'error'); return; }
+      var existing = Object.entries(picks).find(function(e) { return e[1].uid === currentUser.uid; });
+      if (existing) { showStatus('You already claimed ' + existing[0] + '! Tap it to unclaim.', 'error'); return; }
+      picksRef.child(cls).set({ uid:currentUser.uid, name:currentUser.displayName, photo:currentUser.photoURL||'' });
       showStatus('You claimed ' + cls + '!', 'success');
     });
-
-    // Click card to unclaim (if you own it)
     card.addEventListener('click', function() {
       if (!currentUser) return;
       var cls = card.dataset.class;
@@ -361,14 +351,8 @@
     });
   });
 
-  // Firebase real-time listener
-  picksRef.on('value', function(snapshot) {
-    var data = snapshot.val();
-    picks = data || {};
-    render();
-  });
+  picksRef.on('value', function(snap) { picks = snap.val() || {}; render(); });
 })();
 </script>
-
 </body>
 </html>
