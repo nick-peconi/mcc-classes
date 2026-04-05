@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MCC – Character Sheet</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;600;700&display=swap');
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    background:#0d0d0d;
+    background-image:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,255,100,0.012) 2px,rgba(0,255,100,0.012) 4px);
+    color:#c8c8a0;
+    font-family:'Rajdhani',sans-serif;
+    font-size:17px;
+    line-height:1.6;
+    padding:40px 20px 80px;
+  }
+  header { text-align:center; margin-bottom:20px; padding-bottom:30px; border-bottom:1px solid #3a3a2a; }
+  header h1 { font-family:'Share Tech Mono',monospace; font-size:2.2em; color:#d4a030; text-transform:uppercase; letter-spacing:4px; text-shadow:0 0 20px rgba(212,160,48,0.4); margin-bottom:8px; }
+  header .sub { color:#888870; font-size:1em; letter-spacing:2px; text-transform:uppercase; font-family:'Share Tech Mono',monospace; }
+
+  nav { max-width:1100px; margin:0 auto 30px; display:flex; gap:12px; justify-content:center; }
+  nav a { font-family:'Share Tech Mono',monospace; font-size:0.85em; color:#d4a030; text-decoration:none; text-transform:uppercase; letter-spacing:2px; padding:8px 20px; border:1px solid #3a3010; border-radius:3px; transition:background 0.2s, color 0.2s; }
+  nav a:hover, nav a.active { background:#d4a030; color:#0d0d0d; }
+
+  /* Auth */
+  .auth-section { max-width:500px; margin:0 auto 30px; text-align:center; }
+  .sign-in-btn {
+    font-family:'Share Tech Mono',monospace; font-size:0.9em; text-transform:uppercase; letter-spacing:1px;
+    background:#111108; color:#d4a030; border:1px solid #3a3010; padding:12px 28px; border-radius:4px;
+    cursor:pointer; transition:background 0.2s, border-color 0.2s;
+  }
+  .sign-in-btn:hover { background:#1a1a10; border-color:#d4a030; }
+  .user-info { display:flex; align-items:center; justify-content:center; gap:12px; font-family:'Share Tech Mono',monospace; }
+  .user-info img { width:32px; height:32px; border-radius:50%; border:2px solid #d4a030; }
+  .user-info .user-name { color:#d4a030; font-size:1em; }
+  .sign-out-btn {
+    font-family:'Share Tech Mono',monospace; font-size:0.7em; text-transform:uppercase; letter-spacing:1px;
+    background:none; color:#555540; border:1px solid #2a2a1a; padding:4px 12px; border-radius:3px;
+    cursor:pointer; transition:color 0.2s;
+  }
+  .sign-out-btn:hover { color:#e06030; border-color:#e06030; }
+  .auth-prompt { font-family:'Share Tech Mono',monospace; font-size:0.85em; color:#888870; text-transform:uppercase; letter-spacing:2px; margin-bottom:14px; }
+
+  /* Status */
+  .status-msg {
+    max-width:500px; margin:0 auto 20px; text-align:center; font-family:'Share Tech Mono',monospace;
+    font-size:0.85em; padding:10px; border-radius:4px; display:none;
+  }
+  .status-msg.error { display:block; background:#1a0800; border:1px solid #4a1500; color:#e06030; }
+  .status-msg.info { display:block; background:#110e00; border:1px solid #3a3010; color:#d4a030; }
+  .status-msg.success { display:block; background:#001a08; border:1px solid #004a15; color:#50b080; }
+
+  /* Save indicator */
+  .save-indicator {
+    position:fixed; top:16px; right:20px; font-family:'Share Tech Mono',monospace;
+    font-size:0.75em; text-transform:uppercase; letter-spacing:1px; padding:6px 14px;
+    border-radius:3px; z-index:100; opacity:0; transition:opacity 0.3s;
+  }
+  .save-indicator.saving { opacity:1; background:#110e00; border:1px solid #3a3010; color:#d4a030; }
+  .save-indicator.saved { opacity:1; background:#001a08; border:1px solid #004a15; color:#50b080; }
+
+  /* Sheet */
+  .sheet { max-width:800px; margin:0 auto; display:none; }
+
+  .class-banner {
+    text-align:center; padding:20px; margin-bottom:30px;
+    background:#111108; border:1px solid #2a2a1a; border-radius:6px;
+    border-top:3px solid var(--accent);
+  }
+  .class-banner .class-icon { font-size:2.5em; }
+  .class-banner h2 { font-family:'Share Tech Mono',monospace; color:var(--accent); text-transform:uppercase; letter-spacing:3px; font-size:1.4em; }
+  .class-banner .class-role { font-size:0.8em; color:#555540; font-family:'Share Tech Mono',monospace; text-transform:uppercase; letter-spacing:1px; }
+
+  .section { background:#111108; border:1px solid #2a2a1a; border-radius:6px; padding:20px 24px; margin-bottom:20px; }
+  .section h3 {
+    font-family:'Share Tech Mono',monospace; color:#d4a030; text-transform:uppercase;
+    letter-spacing:2px; font-size:0.9em; margin-bottom:16px; padding-bottom:8px;
+    border-bottom:1px solid #2a2a1a;
+  }
+
+  .field-row { display:flex; gap:16px; margin-bottom:12px; flex-wrap:wrap; }
+  .field { flex:1; min-width:120px; }
+  .field label {
+    display:block; font-family:'Share Tech Mono',monospace; font-size:0.72em;
+    color:#888870; text-transform:uppercase; letter-spacing:1px; margin-bottom:4px;
+  }
+  .field input, .field textarea, .field select {
+    width:100%; background:#0a0a06; border:1px solid #2a2a1a; color:#c8c8a0;
+    font-family:'Rajdhani',sans-serif; font-size:1em; padding:8px 12px; border-radius:3px;
+    outline:none; transition:border-color 0.2s;
+  }
+  .field input:focus, .field textarea:focus, .field select:focus { border-color:#d4a030; }
+  .field input::placeholder, .field textarea::placeholder { color:#333320; }
+  .field textarea { resize:vertical; min-height:80px; line-height:1.5; }
+
+  /* Ability scores grid */
+  .abilities { display:grid; grid-template-columns:repeat(3, 1fr); gap:12px; }
+  .ability {
+    text-align:center; background:#0a0a06; border:1px solid #2a2a1a; border-radius:4px; padding:12px 8px;
+  }
+  .ability label {
+    display:block; font-family:'Share Tech Mono',monospace; font-size:0.7em;
+    color:#888870; text-transform:uppercase; letter-spacing:1px; margin-bottom:6px;
+  }
+  .ability input {
+    width:60px; text-align:center; background:transparent; border:1px solid #2a2a1a;
+    color:#d4a030; font-family:'Share Tech Mono',monospace; font-size:1.4em; padding:6px;
+    border-radius:3px; outline:none;
+  }
+  .ability input:focus { border-color:#d4a030; }
+  .ability .mod {
+    font-family:'Share Tech Mono',monospace; font-size:0.75em; color:#555540; margin-top:4px;
+  }
+
+  /* Combat stats */
+  .combat-stats { display:grid; grid-template-columns:repeat(auto-fill, minmax(140px,1fr)); gap:12px; }
+  .combat-stat {
+    text-align:center; background:#0a0a06; border:1px solid #2a2a1a; border-radius:4px; padding:12px 8px;
+  }
+  .combat-stat label {
+    display:block; font-family:'Share Tech Mono',monospace; font-size:0.7em;
+    color:#888870; text-transform:uppercase; letter-spacing:1px; margin-bottom:6px;
+  }
+  .combat-stat input {
+    width:70px; text-align:center; background:transparent; border:1px solid #2a2a1a;
+    color:#e06030; font-family:'Share Tech Mono',monospace; font-size:1.3em; padding:6px;
+    border-radius:3px; outline:none;
+  }
+  .combat-stat input:focus { border-color:#d4a030; }
+
+  /* Mutations section */
+  .mutation-list { display:flex; flex-direction:column; gap:8px; }
+  .mutation-entry {
+    display:flex; gap:10px; align-items:center;
+  }
+  .mutation-entry input { flex:1; }
+  .mutation-entry .remove-btn {
+    background:none; border:1px solid #2a2a1a; color:#555540; font-size:1.2em;
+    width:30px; height:30px; border-radius:3px; cursor:pointer; transition:color 0.2s;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .mutation-entry .remove-btn:hover { color:#e06030; border-color:#e06030; }
+  .add-btn {
+    font-family:'Share Tech Mono',monospace; font-size:0.8em; text-transform:uppercase; letter-spacing:1px;
+    background:rgba(212,160,48,0.1); color:#d4a030; border:1px solid #3a3010;
+    padding:8px 16px; border-radius:3px; cursor:pointer; margin-top:8px; transition:background 0.2s;
+  }
+  .add-btn:hover { background:rgba(212,160,48,0.2); }
+
+  /* No class */
+  .no-class { max-width:500px; margin:40px auto; text-align:center; }
+  .no-class p { font-family:'Share Tech Mono',monospace; color:#888870; font-size:1em; margin-bottom:16px; }
+  .no-class a { color:#d4a030; }
+
+  .sentinel  { --accent:#e06030; --accent-rgb:224,96,48; }
+  .rover     { --accent:#50b080; --accent-rgb:80,176,128; }
+  .shaman    { --accent:#9060d0; --accent-rgb:144,96,208; }
+  .healer    { --accent:#40a8c0; --accent-rgb:64,168,192; }
+  .mutant    { --accent:#c0c030; --accent-rgb:192,192,48; }
+  .manimal   { --accent:#d07030; --accent-rgb:208,112,48; }
+  .plantient { --accent:#60c040; --accent-rgb:96,192,64; }
+
+  footer { text-align:center; margin-top:50px; font-family:'Share Tech Mono',monospace; font-size:0.75em; color:#444430; letter-spacing:2px; text-transform:uppercase; }
+
+  @media (max-width:500px) {
+    .abilities { grid-template-columns:repeat(2, 1fr); }
+    .combat-stats { grid-template-columns:repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<div class="save-indicator" id="saveIndicator"></div>
+
+<header>
+  <h1>Mutant Crawl Classics</h1>
+  <p class="sub">Character Sheet // Terra A.D.</p>
+</header>
+
+<nav>
+  <a href="index.html">Classes</a>
+  <a href="pick.html">Pick Your Class</a>
+  <a href="sheet.html" class="active">Character Sheet</a>
+</nav>
+
+<div class="auth-section" id="authSection">
+  <div id="signedOut">
+    <p class="auth-prompt">Sign in to access your character sheet</p>
+    <button class="sign-in-btn" id="signInBtn">Sign in with Google</button>
+  </div>
+  <div id="signedIn" style="display:none;">
+    <div class="user-info">
+      <img id="userPhoto" src="" alt="">
+      <span class="user-name" id="userName"></span>
+      <button class="sign-out-btn" id="signOutBtn">Sign Out</button>
+    </div>
+  </div>
+</div>
+
+<div id="statusMsg" class="status-msg"></div>
+
+<div id="noClass" class="no-class" style="display:none;">
+  <p>You haven't claimed a class yet.</p>
+  <a href="pick.html">Pick your class first</a>
+</div>
+
+<div class="sheet" id="sheet">
+
+  <div class="class-banner" id="classBanner">
+    <div class="class-icon" id="classIcon"></div>
+    <h2 id="className"></h2>
+    <div class="class-role" id="classRole"></div>
+  </div>
+
+  <!-- Identity -->
+  <div class="section">
+    <h3>Identity</h3>
+    <div class="field-row">
+      <div class="field" style="flex:2;"><label>Character Name</label><input type="text" data-field="charName" placeholder="What do they call you?"></div>
+      <div class="field"><label>Level</label><input type="number" data-field="level" placeholder="1" min="0" max="10"></div>
+      <div class="field"><label>XP</label><input type="number" data-field="xp" placeholder="0" min="0"></div>
+    </div>
+    <div class="field-row">
+      <div class="field"><label>Title</label><input type="text" data-field="title" placeholder="Title / Rank"></div>
+      <div class="field"><label>Alignment</label>
+        <select data-field="alignment">
+          <option value="">-- Choose --</option>
+          <option value="lawful">Lawful</option>
+          <option value="neutral">Neutral</option>
+          <option value="chaotic">Chaotic</option>
+        </select>
+      </div>
+      <div class="field"><label>Archaic Alignment</label><input type="text" data-field="archaicAlignment" placeholder="Optional"></div>
+    </div>
+  </div>
+
+  <!-- Ability Scores -->
+  <div class="section">
+    <h3>Ability Scores</h3>
+    <div class="abilities">
+      <div class="ability">
+        <label>Strength</label>
+        <input type="number" data-field="str" placeholder="--" min="1" max="24">
+        <div class="mod" id="strMod"></div>
+      </div>
+      <div class="ability">
+        <label>Agility</label>
+        <input type="number" data-field="agi" placeholder="--" min="1" max="24">
+        <div class="mod" id="agiMod"></div>
+      </div>
+      <div class="ability">
+        <label>Stamina</label>
+        <input type="number" data-field="sta" placeholder="--" min="1" max="24">
+        <div class="mod" id="staMod"></div>
+      </div>
+      <div class="ability">
+        <label>Personality</label>
+        <input type="number" data-field="per" placeholder="--" min="1" max="24">
+        <div class="mod" id="perMod"></div>
+      </div>
+      <div class="ability">
+        <label>Intelligence</label>
+        <input type="number" data-field="int" placeholder="--" min="1" max="24">
+        <div class="mod" id="intMod"></div>
+      </div>
+      <div class="ability">
+        <label>Luck</label>
+        <input type="number" data-field="luk" placeholder="--" min="1" max="24">
+        <div class="mod" id="lukMod"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Combat -->
+  <div class="section">
+    <h3>Combat</h3>
+    <div class="combat-stats">
+      <div class="combat-stat"><label>HP</label><input type="number" data-field="hp" placeholder="--"></div>
+      <div class="combat-stat"><label>Max HP</label><input type="number" data-field="maxHp" placeholder="--"></div>
+      <div class="combat-stat"><label>AC</label><input type="number" data-field="ac" placeholder="10"></div>
+      <div class="combat-stat"><label>Initiative</label><input type="text" data-field="init" placeholder="+0"></div>
+      <div class="combat-stat"><label>Attack Bonus</label><input type="text" data-field="attackBonus" placeholder="+0"></div>
+      <div class="combat-stat"><label>Crit Die</label><input type="text" data-field="critDie" placeholder="1d8"></div>
+      <div class="combat-stat"><label>Crit Table</label><input type="text" data-field="critTable" placeholder="III"></div>
+      <div class="combat-stat"><label>Ref Save</label><input type="text" data-field="refSave" placeholder="+0"></div>
+      <div class="combat-stat"><label>Fort Save</label><input type="text" data-field="fortSave" placeholder="+0"></div>
+      <div class="combat-stat"><label>Will Save</label><input type="text" data-field="willSave" placeholder="+0"></div>
+    </div>
+  </div>
+
+  <!-- Mutations -->
+  <div class="section" id="mutationsSection">
+    <h3>Mutations</h3>
+    <div class="mutation-list" id="mutationList"></div>
+    <button class="add-btn" id="addMutation">+ Add Mutation</button>
+  </div>
+
+  <!-- Weapons -->
+  <div class="section">
+    <h3>Weapons</h3>
+    <div class="field-row">
+      <div class="field" style="flex:2;"><label>Weapon 1</label><input type="text" data-field="weapon1" placeholder="Weapon name"></div>
+      <div class="field"><label>Damage</label><input type="text" data-field="weapon1Dmg" placeholder="1d6"></div>
+      <div class="field"><label>Range</label><input type="text" data-field="weapon1Range" placeholder="Melee"></div>
+    </div>
+    <div class="field-row">
+      <div class="field" style="flex:2;"><label>Weapon 2</label><input type="text" data-field="weapon2" placeholder="Weapon name"></div>
+      <div class="field"><label>Damage</label><input type="text" data-field="weapon2Dmg" placeholder="1d6"></div>
+      <div class="field"><label>Range</label><input type="text" data-field="weapon2Range" placeholder="Melee"></div>
+    </div>
+    <div class="field-row">
+      <div class="field" style="flex:2;"><label>Weapon 3</label><input type="text" data-field="weapon3" placeholder="Weapon name"></div>
+      <div class="field"><label>Damage</label><input type="text" data-field="weapon3Dmg" placeholder="1d6"></div>
+      <div class="field"><label>Range</label><input type="text" data-field="weapon3Range" placeholder="Melee"></div>
+    </div>
+  </div>
+
+  <!-- Artifacts -->
+  <div class="section">
+    <h3>Artifacts &amp; Equipment</h3>
+    <div class="field">
+      <textarea data-field="equipment" placeholder="List your gear, artifacts, and ancient tech..." rows="5"></textarea>
+    </div>
+  </div>
+
+  <!-- Notes -->
+  <div class="section">
+    <h3>Notes &amp; Backstory</h3>
+    <div class="field">
+      <textarea data-field="notes" placeholder="Backstory, allies, enemies, goals..." rows="6"></textarea>
+    </div>
+  </div>
+
+</div>
+
+<footer>Terra A.D. // Mutant Crawl Classics RPG // Goodman Games</footer>
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+
+<script>
+(function() {
+  var firebaseConfig = {
+    apiKey: "AIzaSyCWmlZK3ZN8Q-AlUmyf0g2hmJIs2Z02eGU",
+    authDomain: "mcccampaign-e10e5.firebaseapp.com",
+    databaseURL: "https://mcccampaign-e10e5-default-rtdb.firebaseio.com",
+    projectId: "mcccampaign-e10e5",
+    storageBucket: "mcccampaign-e10e5.firebasestorage.app",
+    messagingSenderId: "506943857263",
+    appId: "1:506943857263:web:934228794d12d5d15f239a"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  var auth = firebase.auth();
+  var db = firebase.database();
+  var provider = new firebase.auth.GoogleAuthProvider();
+
+  var CLASS_INFO = {
+    sentinel:  { icon: '\u2694\uFE0F', name: 'Sentinel',  role: 'Warrior of the Wastes',       hasMutations: false },
+    rover:     { icon: '\uD83D\uDDE1\uFE0F', name: 'Rover',     role: 'Scout & Scavenger',          hasMutations: false },
+    shaman:    { icon: '\uD83D\uDD2E', name: 'Shaman',    role: 'Keeper of Ancient Knowledge', hasMutations: false },
+    healer:    { icon: '\uD83D\uDC89', name: 'Healer',    role: 'The Medic',                   hasMutations: false },
+    mutant:    { icon: '\u2622\uFE0F', name: 'Mutant',    role: 'Unpredictable & Unique',      hasMutations: true },
+    manimal:   { icon: '\uD83D\uDC3E', name: 'Manimal',   role: 'Human-Animal Hybrid',         hasMutations: true },
+    plantient: { icon: '\uD83C\uDF3F', name: 'Plantient', role: 'Sentient Plant Creature',     hasMutations: true }
+  };
+
+  // DOM
+  var signedOutDiv = document.getElementById('signedOut');
+  var signedInDiv = document.getElementById('signedIn');
+  var signInBtn = document.getElementById('signInBtn');
+  var signOutBtn = document.getElementById('signOutBtn');
+  var userPhoto = document.getElementById('userPhoto');
+  var userNameEl = document.getElementById('userName');
+  var statusMsg = document.getElementById('statusMsg');
+  var sheetDiv = document.getElementById('sheet');
+  var noClassDiv = document.getElementById('noClass');
+  var saveIndicator = document.getElementById('saveIndicator');
+
+  var currentUser = null;
+  var currentClass = null;
+  var sheetRef = null;
+  var saveTimeout = null;
+  var mutations = [];
+
+  // Ability modifier table (DCC/MCC)
+  function getMod(score) {
+    score = parseInt(score);
+    if (isNaN(score)) return '';
+    if (score <= 3) return '-3';
+    if (score <= 5) return '-2';
+    if (score <= 8) return '-1';
+    if (score <= 12) return '+0';
+    if (score <= 15) return '+1';
+    if (score <= 17) return '+2';
+    if (score <= 20) return '+3';
+    return '+4';
+  }
+
+  function updateMods() {
+    ['str','agi','sta','per','int','luk'].forEach(function(ab) {
+      var input = document.querySelector('[data-field="' + ab + '"]');
+      var modEl = document.getElementById(ab + 'Mod');
+      if (input && modEl) {
+        var mod = getMod(input.value);
+        modEl.textContent = mod ? 'Mod: ' + mod : '';
+      }
+    });
+  }
+
+  // Auth
+  auth.onAuthStateChanged(function(user) {
+    if (user) {
+      currentUser = { uid: user.uid, displayName: user.displayName, photoURL: user.photoURL };
+      signedOutDiv.style.display = 'none';
+      signedInDiv.style.display = 'block';
+      userNameEl.textContent = user.displayName;
+      userPhoto.src = user.photoURL || '';
+      loadPlayerClass();
+    } else {
+      currentUser = null;
+      signedOutDiv.style.display = 'block';
+      signedInDiv.style.display = 'none';
+      sheetDiv.style.display = 'none';
+      noClassDiv.style.display = 'none';
+    }
+  });
+
+  signInBtn.addEventListener('click', function() {
+    auth.signInWithPopup(provider).catch(function(err) {
+      console.error('Sign-in error:', err);
+      showStatus('Sign-in failed. Try again.', 'error');
+    });
+  });
+
+  signOutBtn.addEventListener('click', function() { auth.signOut(); });
+
+  function showStatus(msg, type) {
+    statusMsg.textContent = msg;
+    statusMsg.className = 'status-msg ' + type;
+    setTimeout(function() { statusMsg.className = 'status-msg'; }, 3000);
+  }
+
+  function showSave(state) {
+    saveIndicator.textContent = state === 'saving' ? 'Saving...' : 'Saved';
+    saveIndicator.className = 'save-indicator ' + state;
+    if (state === 'saved') {
+      setTimeout(function() { saveIndicator.className = 'save-indicator'; }, 1500);
+    }
+  }
+
+  // Find what class this user picked
+  function loadPlayerClass() {
+    db.ref('picks').once('value', function(snapshot) {
+      var picks = snapshot.val() || {};
+      currentClass = null;
+
+      Object.keys(picks).forEach(function(cls) {
+        if (picks[cls].uid === currentUser.uid) {
+          currentClass = cls;
+        }
+      });
+
+      if (!currentClass) {
+        sheetDiv.style.display = 'none';
+        noClassDiv.style.display = 'block';
+        return;
+      }
+
+      noClassDiv.style.display = 'none';
+      setupSheet();
+    });
+  }
+
+  function setupSheet() {
+    var info = CLASS_INFO[currentClass];
+    if (!info) return;
+
+    // Set banner
+    var banner = document.getElementById('classBanner');
+    banner.className = 'class-banner ' + currentClass;
+    document.getElementById('classIcon').textContent = info.icon;
+    document.getElementById('className').textContent = info.name;
+    document.getElementById('classRole').textContent = info.role;
+
+    // Show/hide mutations section
+    document.getElementById('mutationsSection').style.display = info.hasMutations ? 'block' : 'none';
+
+    sheetDiv.style.display = 'block';
+
+    // Set up sheet ref and load data
+    sheetRef = db.ref('sheets/' + currentUser.uid);
+    loadSheet();
+  }
+
+  function loadSheet() {
+    sheetRef.once('value', function(snapshot) {
+      var data = snapshot.val() || {};
+
+      // Populate all simple fields
+      document.querySelectorAll('[data-field]').forEach(function(el) {
+        var key = el.getAttribute('data-field');
+        if (data[key] !== undefined && data[key] !== null) {
+          el.value = data[key];
+        }
+      });
+
+      // Load mutations
+      mutations = data.mutations || [];
+      renderMutations();
+      updateMods();
+    });
+
+    // Listen for real-time updates (e.g. if GM edits)
+    sheetRef.on('value', function(snapshot) {
+      // We only use this for the save indicator confirmation
+    });
+  }
+
+  function renderMutations() {
+    var list = document.getElementById('mutationList');
+    list.innerHTML = '';
+    mutations.forEach(function(mut, i) {
+      var entry = document.createElement('div');
+      entry.className = 'mutation-entry';
+      entry.innerHTML = '<input type="text" class="mutation-input" placeholder="Mutation name & effect..." value="' +
+        escapeAttr(mut) + '" data-mutation-index="' + i + '">' +
+        '<button class="remove-btn" data-mutation-remove="' + i + '">&times;</button>';
+      list.appendChild(entry);
+    });
+
+    // Bind events
+    list.querySelectorAll('.mutation-input').forEach(function(input) {
+      input.addEventListener('input', function() {
+        var idx = parseInt(this.getAttribute('data-mutation-index'));
+        mutations[idx] = this.value;
+        scheduleSave();
+      });
+    });
+    list.querySelectorAll('.remove-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var idx = parseInt(this.getAttribute('data-mutation-remove'));
+        mutations.splice(idx, 1);
+        renderMutations();
+        scheduleSave();
+      });
+    });
+  }
+
+  function escapeAttr(str) {
+    return str.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  // Add mutation button
+  document.getElementById('addMutation').addEventListener('click', function() {
+    mutations.push('');
+    renderMutations();
+    // Focus the new input
+    var inputs = document.querySelectorAll('.mutation-input');
+    if (inputs.length) inputs[inputs.length - 1].focus();
+  });
+
+  // Auto-save on input
+  document.addEventListener('input', function(e) {
+    if (e.target.hasAttribute('data-field')) {
+      scheduleSave();
+      // Update ability mods
+      if (['str','agi','sta','per','int','luk'].indexOf(e.target.getAttribute('data-field')) !== -1) {
+        updateMods();
+      }
+    }
+  });
+  document.addEventListener('change', function(e) {
+    if (e.target.hasAttribute('data-field')) {
+      scheduleSave();
+    }
+  });
+
+  function scheduleSave() {
+    if (saveTimeout) clearTimeout(saveTimeout);
+    showSave('saving');
+    saveTimeout = setTimeout(saveSheet, 800);
+  }
+
+  function saveSheet() {
+    if (!sheetRef) return;
+
+    var data = { playerClass: currentClass };
+
+    document.querySelectorAll('[data-field]').forEach(function(el) {
+      data[el.getAttribute('data-field')] = el.value;
+    });
+
+    data.mutations = mutations;
+    data.lastUpdated = firebase.database.ServerValue.TIMESTAMP;
+
+    sheetRef.set(data).then(function() {
+      showSave('saved');
+    }).catch(function(err) {
+      console.error('Save failed:', err);
+      showStatus('Save failed!', 'error');
+    });
+  }
+})();
+</script>
+
+</body>
+</html>
