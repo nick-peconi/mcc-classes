@@ -89,148 +89,172 @@
 
   /* Detail Modal — Card Flip */
   .detail-overlay {
-    position:fixed; inset:0; z-index:1000; background:rgba(0,0,0,0.85);
-    display:none; align-items:flex-start; justify-content:center;
-    padding:20px 10px; overflow-y:auto;
-    -webkit-overflow-scrolling:touch;
+    position:fixed; inset:0; z-index:1000; background:rgba(0,0,0,0.88);
+    display:none; align-items:center; justify-content:center;
+    padding:12px; overflow:hidden;
   }
   .detail-overlay.open { display:flex; }
+
+  /* Card container — tarot proportions */
   .detail-card-container {
-    width:100%; max-width:420px; margin:20px 0 40px;
+    width:calc(100vw - 32px); max-width:360px;
+    height:calc(100vh - 40px); max-height:640px;
     perspective:1200px;
   }
   .detail-card {
-    display:grid; width:100%; transition:transform 0.6s;
+    width:100%; height:100%;
+    position:relative;
+    transition:transform 0.7s cubic-bezier(0.4,0.2,0.2,1);
     transform-style:preserve-3d;
   }
   .detail-card.flipped { transform:rotateY(180deg); }
+
   .detail-card-face {
-    grid-area:1/1; border-radius:10px; border:2px solid #2a2a1a;
-    overflow:hidden; backface-visibility:hidden;
+    position:absolute; inset:0;
+    border-radius:12px; border:2px solid #3a3a2a;
+    overflow:hidden;
+    backface-visibility:hidden;
     -webkit-backface-visibility:hidden;
+    box-shadow:0 0 40px rgba(0,0,0,0.6), 0 0 12px rgba(var(--accent-rgb),0.15);
   }
+
   /* FRONT — Art side */
   .detail-front {
-    background:#0a0a06; position:relative;
+    background:#0a0a06;
+    display:flex; flex-direction:column;
+  }
+  .detail-front .card-art-wrap {
+    flex:1; position:relative; overflow:hidden;
+    min-height:0;
   }
   .detail-front .card-art {
-    width:100%; display:block; border-radius:10px 10px 0 0;
+    width:100%; height:100%; object-fit:cover;
+    display:block;
   }
   .detail-front .card-art-overlay {
     position:absolute; bottom:0; left:0; right:0;
-    background:linear-gradient(transparent 0%, rgba(10,10,6,0.95) 100%);
-    padding:40px 16px 16px; text-align:center;
+    background:linear-gradient(transparent 0%, rgba(10,10,6,0.97) 100%);
+    padding:50px 16px 12px; text-align:center;
   }
   .detail-front .card-art-overlay h2 {
     font-family:'Share Tech Mono',monospace; color:var(--accent);
-    text-transform:uppercase; letter-spacing:3px; font-size:1.4em;
-    text-shadow:0 0 20px rgba(var(--accent-rgb),0.6);
+    text-transform:uppercase; letter-spacing:3px; font-size:1.3em;
+    text-shadow:0 0 20px rgba(var(--accent-rgb),0.6), 0 2px 4px rgba(0,0,0,0.8);
     margin-bottom:2px;
   }
   .detail-front .card-art-overlay .detail-role {
-    font-family:'Share Tech Mono',monospace; font-size:0.7em;
+    font-family:'Share Tech Mono',monospace; font-size:0.65em;
     color:#888870; text-transform:uppercase; letter-spacing:2px;
   }
-  .detail-front .card-border-bottom {
-    background:#0a0a06; padding:10px 16px 12px; text-align:center;
+  .detail-front .card-bottom {
+    background:#0a0a06; padding:10px 16px 14px; text-align:center;
     border-top:1px solid rgba(var(--accent-rgb),0.2);
+    flex-shrink:0;
   }
   .card-flip-hint {
-    font-family:'Share Tech Mono',monospace; font-size:0.65em;
+    font-family:'Share Tech Mono',monospace; font-size:0.6em;
     color:#555540; text-transform:uppercase; letter-spacing:2px;
+    margin-bottom:6px;
     animation:pulse-hint 2s ease-in-out infinite;
   }
   @keyframes pulse-hint { 0%,100%{opacity:0.4} 50%{opacity:1} }
   .card-flip-btn {
-    font-family:'Share Tech Mono',monospace; font-size:0.75em; text-transform:uppercase; letter-spacing:2px;
+    font-family:'Share Tech Mono',monospace; font-size:0.7em; text-transform:uppercase; letter-spacing:2px;
     background:rgba(var(--accent-rgb),0.12); color:var(--accent); border:1px solid rgba(var(--accent-rgb),0.3);
     padding:10px 24px; border-radius:4px; cursor:pointer; min-height:40px;
-    margin-top:6px;
   }
   .card-flip-btn:active { background:rgba(var(--accent-rgb),0.3); }
+
+  /* Close button */
+  .detail-close {
+    position:absolute; top:8px; right:10px; background:rgba(0,0,0,0.5); border:none;
+    color:#888870; font-size:1.4em; cursor:pointer; padding:4px 10px;
+    font-family:'Share Tech Mono',monospace; min-height:36px; min-width:36px;
+    z-index:10; border-radius:4px; line-height:1;
+  }
+  .detail-close:active { color:#e06030; }
+
   /* BACK — Details side */
   .detail-back {
     background:#111108; transform:rotateY(180deg);
-  }
-  .detail-back-scroll {
-    max-height:80vh; overflow-y:auto; -webkit-overflow-scrolling:touch;
+    display:flex; flex-direction:column;
   }
   .detail-back-header {
-    text-align:center; padding:16px 16px 10px;
+    text-align:center; padding:14px 16px 10px;
     border-bottom:1px solid #1e1e12;
     background:linear-gradient(180deg, rgba(var(--accent-rgb),0.08) 0%, transparent 100%);
-    position:sticky; top:0; z-index:1; background-color:#111108;
+    flex-shrink:0;
   }
-  .detail-back-header .icon { font-size:2em; filter:drop-shadow(0 0 12px rgba(var(--accent-rgb),0.5)); }
+  .detail-back-header .icon { font-size:1.6em; filter:drop-shadow(0 0 12px rgba(var(--accent-rgb),0.5)); }
   .detail-back-header h2 {
     font-family:'Share Tech Mono',monospace; color:var(--accent);
-    text-transform:uppercase; letter-spacing:3px; font-size:1.1em; margin:4px 0 2px;
+    text-transform:uppercase; letter-spacing:3px; font-size:1em; margin:2px 0;
   }
   .detail-back-header .detail-role {
-    font-family:'Share Tech Mono',monospace; font-size:0.65em;
+    font-family:'Share Tech Mono',monospace; font-size:0.6em;
     color:#555540; text-transform:uppercase; letter-spacing:2px;
   }
-  .detail-close {
-    position:absolute; top:10px; right:12px; background:none; border:none;
-    color:#555540; font-size:1.6em; cursor:pointer; padding:4px 8px;
-    font-family:'Share Tech Mono',monospace; min-height:40px; min-width:40px;
-    z-index:10;
+  .detail-back-scroll {
+    flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; min-height:0;
   }
-  .detail-close:active { color:#e06030; }
-  .detail-body { padding:16px; }
+  .detail-body { padding:14px; }
   .detail-body .flavor {
-    color:#a0a080; font-size:0.88em; line-height:1.6; margin-bottom:16px;
+    color:#a0a080; font-size:0.82em; line-height:1.5; margin-bottom:14px;
     font-style:italic; border-left:3px solid rgba(var(--accent-rgb),0.3);
-    padding-left:12px;
+    padding-left:10px;
   }
-  .detail-section { margin-bottom:14px; }
+  .detail-section { margin-bottom:12px; }
   .detail-section h4 {
     font-family:'Share Tech Mono',monospace; color:var(--accent);
-    text-transform:uppercase; letter-spacing:2px; font-size:0.75em;
-    margin-bottom:6px; padding-bottom:4px; border-bottom:1px solid #1e1e12;
+    text-transform:uppercase; letter-spacing:2px; font-size:0.7em;
+    margin-bottom:5px; padding-bottom:3px; border-bottom:1px solid #1e1e12;
   }
   .detail-section p, .detail-section li {
-    color:#b0b090; font-size:0.85em; line-height:1.55;
+    color:#b0b090; font-size:0.8em; line-height:1.5;
   }
   .detail-section ul { list-style:none; padding:0; }
-  .detail-section ul li { padding:3px 0 3px 14px; position:relative; }
+  .detail-section ul li { padding:2px 0 2px 14px; position:relative; }
   .detail-section ul li::before {
     content:'\25B8'; position:absolute; left:0; color:var(--accent); font-size:0.8em;
   }
-  .detail-table-wrap { overflow-x:auto; -webkit-overflow-scrolling:touch; margin-top:6px; }
+  .detail-table-wrap { overflow-x:auto; -webkit-overflow-scrolling:touch; margin-top:5px; }
   .detail-table {
     width:100%; border-collapse:collapse; font-family:'Share Tech Mono',monospace;
-    font-size:0.65em; white-space:nowrap;
+    font-size:0.58em; white-space:nowrap;
   }
   .detail-table th {
     color:var(--accent); text-transform:uppercase; letter-spacing:1px;
-    padding:6px 6px; border-bottom:1px solid rgba(var(--accent-rgb),0.3);
+    padding:4px 4px; border-bottom:1px solid rgba(var(--accent-rgb),0.3);
     text-align:center; font-weight:600;
   }
   .detail-table td {
-    color:#b0b090; padding:4px 6px; text-align:center;
+    color:#b0b090; padding:3px 4px; text-align:center;
     border-bottom:1px solid #1a1a10;
   }
   .detail-table tr:hover td { background:rgba(var(--accent-rgb),0.05); }
   .detail-titles {
-    display:flex; flex-wrap:wrap; gap:4px 10px; margin-top:6px;
+    display:flex; flex-wrap:wrap; gap:3px 8px; margin-top:5px;
   }
   .detail-titles span {
-    font-family:'Share Tech Mono',monospace; font-size:0.78em; color:#b0b090;
+    font-family:'Share Tech Mono',monospace; font-size:0.72em; color:#b0b090;
   }
   .detail-titles span em { color:var(--accent); font-style:normal; font-size:0.85em; margin-right:3px; }
-  .detail-footer { padding:12px 16px 16px; border-top:1px solid #1e1e12; text-align:center; }
+  .detail-footer {
+    padding:10px 14px 14px; border-top:1px solid #1e1e12; text-align:center;
+    flex-shrink:0;
+  }
+  .detail-back .card-flip-btn { margin-bottom:8px; }
   .detail-claim-btn {
-    font-family:'Share Tech Mono',monospace; font-size:0.9em; text-transform:uppercase; letter-spacing:2px;
+    font-family:'Share Tech Mono',monospace; font-size:0.8em; text-transform:uppercase; letter-spacing:2px;
     background:rgba(var(--accent-rgb),0.15); color:var(--accent); border:1px solid rgba(var(--accent-rgb),0.4);
-    padding:14px 32px; border-radius:4px; cursor:pointer; min-height:48px; width:100%;
+    padding:12px 24px; border-radius:4px; cursor:pointer; min-height:44px; width:100%;
     transition:background 0.2s;
   }
   .detail-claim-btn:active { background:rgba(var(--accent-rgb),0.35); }
   .detail-claim-btn:disabled { opacity:0.4; cursor:default; }
   .detail-claimed-msg {
-    font-family:'Share Tech Mono',monospace; font-size:0.8em; color:var(--accent);
-    padding:10px; display:none;
+    font-family:'Share Tech Mono',monospace; font-size:0.75em; color:var(--accent);
+    padding:8px; display:none;
   }
 
   /* Roster */
@@ -392,31 +416,33 @@
       <!-- FRONT: Art -->
       <div class="detail-card-face detail-front" id="detailFront">
         <button class="detail-close" id="detailCloseFront">&times;</button>
-        <img class="card-art" id="cardArt" src="" alt="">
-        <div class="card-art-overlay">
-          <h2 id="detailNameFront"></h2>
-          <div class="detail-role" id="detailRoleFront"></div>
+        <div class="card-art-wrap">
+          <img class="card-art" id="cardArt" src="" alt="">
+          <div class="card-art-overlay">
+            <h2 id="detailNameFront"></h2>
+            <div class="detail-role" id="detailRoleFront"></div>
+          </div>
         </div>
-        <div class="card-border-bottom">
+        <div class="card-bottom">
           <div class="card-flip-hint">Tap to view details</div>
           <button class="card-flip-btn" id="flipToBack">View Details &#x21BB;</button>
         </div>
       </div>
       <!-- BACK: Details -->
       <div class="detail-card-face detail-back" id="detailBack">
+        <button class="detail-close" id="detailCloseBack">&times;</button>
+        <div class="detail-back-header">
+          <div class="icon" id="detailIcon"></div>
+          <h2 id="detailName"></h2>
+          <div class="detail-role" id="detailRole"></div>
+        </div>
         <div class="detail-back-scroll">
-          <button class="detail-close" id="detailCloseBack">&times;</button>
-          <div class="detail-back-header">
-            <div class="icon" id="detailIcon"></div>
-            <h2 id="detailName"></h2>
-            <div class="detail-role" id="detailRole"></div>
-            <button class="card-flip-btn" id="flipToFront" style="margin-top:8px;">View Art &#x21BB;</button>
-          </div>
           <div class="detail-body" id="detailBody"></div>
-          <div class="detail-footer" id="detailFooter">
-            <button class="detail-claim-btn" id="detailClaimBtn">Claim This Class</button>
-            <div class="detail-claimed-msg" id="detailClaimedMsg"></div>
-          </div>
+        </div>
+        <div class="detail-footer" id="detailFooter">
+          <button class="card-flip-btn" id="flipToFront">View Art &#x21BB;</button>
+          <button class="detail-claim-btn" id="detailClaimBtn">Claim This Class</button>
+          <div class="detail-claimed-msg" id="detailClaimedMsg"></div>
         </div>
       </div>
     </div>
