@@ -87,6 +87,95 @@
   .manimal   { --accent:#d07030; --accent-rgb:208,112,48; }
   .plantient { --accent:#60c040; --accent-rgb:96,192,64; }
 
+  /* Detail Modal */
+  .detail-overlay {
+    position:fixed; inset:0; z-index:1000; background:rgba(0,0,0,0.85);
+    display:none; align-items:flex-start; justify-content:center;
+    padding:20px 10px; overflow-y:auto;
+    -webkit-overflow-scrolling:touch;
+  }
+  .detail-overlay.open { display:flex; }
+  .detail-modal {
+    background:#111108; border:1px solid #2a2a1a; border-top:3px solid var(--accent);
+    border-radius:8px; width:100%; max-width:520px; margin:20px 0 40px;
+    position:relative;
+  }
+  .detail-header {
+    text-align:center; padding:20px 16px 14px;
+    border-bottom:1px solid #1e1e12;
+    background:linear-gradient(180deg, rgba(var(--accent-rgb),0.08) 0%, transparent 100%);
+  }
+  .detail-header .icon { font-size:2.8em; filter:drop-shadow(0 0 16px rgba(var(--accent-rgb),0.5)); }
+  .detail-header h2 {
+    font-family:'Share Tech Mono',monospace; color:var(--accent);
+    text-transform:uppercase; letter-spacing:3px; font-size:1.3em; margin:6px 0 2px;
+  }
+  .detail-header .detail-role {
+    font-family:'Share Tech Mono',monospace; font-size:0.7em;
+    color:#555540; text-transform:uppercase; letter-spacing:2px;
+  }
+  .detail-close {
+    position:absolute; top:10px; right:12px; background:none; border:none;
+    color:#555540; font-size:1.6em; cursor:pointer; padding:4px 8px;
+    font-family:'Share Tech Mono',monospace; min-height:40px; min-width:40px;
+  }
+  .detail-close:active { color:#e06030; }
+  .detail-body { padding:16px; }
+  .detail-body .flavor {
+    color:#a0a080; font-size:0.88em; line-height:1.6; margin-bottom:16px;
+    font-style:italic; border-left:3px solid rgba(var(--accent-rgb),0.3);
+    padding-left:12px;
+  }
+  .detail-section { margin-bottom:14px; }
+  .detail-section h4 {
+    font-family:'Share Tech Mono',monospace; color:var(--accent);
+    text-transform:uppercase; letter-spacing:2px; font-size:0.75em;
+    margin-bottom:6px; padding-bottom:4px; border-bottom:1px solid #1e1e12;
+  }
+  .detail-section p, .detail-section li {
+    color:#b0b090; font-size:0.85em; line-height:1.55;
+  }
+  .detail-section ul { list-style:none; padding:0; }
+  .detail-section ul li { padding:3px 0 3px 14px; position:relative; }
+  .detail-section ul li::before {
+    content:'\25B8'; position:absolute; left:0; color:var(--accent); font-size:0.8em;
+  }
+  .detail-table-wrap { overflow-x:auto; -webkit-overflow-scrolling:touch; margin-top:6px; }
+  .detail-table {
+    width:100%; border-collapse:collapse; font-family:'Share Tech Mono',monospace;
+    font-size:0.65em; white-space:nowrap;
+  }
+  .detail-table th {
+    color:var(--accent); text-transform:uppercase; letter-spacing:1px;
+    padding:6px 6px; border-bottom:1px solid rgba(var(--accent-rgb),0.3);
+    text-align:center; font-weight:600;
+  }
+  .detail-table td {
+    color:#b0b090; padding:4px 6px; text-align:center;
+    border-bottom:1px solid #1a1a10;
+  }
+  .detail-table tr:hover td { background:rgba(var(--accent-rgb),0.05); }
+  .detail-titles {
+    display:flex; flex-wrap:wrap; gap:4px 10px; margin-top:6px;
+  }
+  .detail-titles span {
+    font-family:'Share Tech Mono',monospace; font-size:0.78em; color:#b0b090;
+  }
+  .detail-titles span em { color:var(--accent); font-style:normal; font-size:0.85em; margin-right:3px; }
+  .detail-footer { padding:12px 16px 16px; border-top:1px solid #1e1e12; text-align:center; }
+  .detail-claim-btn {
+    font-family:'Share Tech Mono',monospace; font-size:0.9em; text-transform:uppercase; letter-spacing:2px;
+    background:rgba(var(--accent-rgb),0.15); color:var(--accent); border:1px solid rgba(var(--accent-rgb),0.4);
+    padding:14px 32px; border-radius:4px; cursor:pointer; min-height:48px; width:100%;
+    transition:background 0.2s;
+  }
+  .detail-claim-btn:active { background:rgba(var(--accent-rgb),0.35); }
+  .detail-claim-btn:disabled { opacity:0.4; cursor:default; }
+  .detail-claimed-msg {
+    font-family:'Share Tech Mono',monospace; font-size:0.8em; color:var(--accent);
+    padding:10px; display:none;
+  }
+
   /* Roster */
   .roster { max-width:1100px; margin:20px auto 0; }
   .roster h3 { font-family:'Share Tech Mono',monospace; color:#d4a030; text-transform:uppercase; letter-spacing:2px; font-size:0.85em; margin-bottom:10px; text-align:center; }
@@ -240,12 +329,172 @@
   <a href="sheet.html"><span class="nav-icon">&#x1F4DC;</span>Sheet</a>
 </nav>
 
+<div class="detail-overlay" id="detailOverlay">
+  <div class="detail-modal" id="detailModal">
+    <button class="detail-close" id="detailClose">&times;</button>
+    <div class="detail-header" id="detailHeader">
+      <div class="icon" id="detailIcon"></div>
+      <h2 id="detailName"></h2>
+      <div class="detail-role" id="detailRole"></div>
+    </div>
+    <div class="detail-body" id="detailBody"></div>
+    <div class="detail-footer" id="detailFooter">
+      <button class="detail-claim-btn" id="detailClaimBtn">Claim This Class</button>
+      <div class="detail-claimed-msg" id="detailClaimedMsg"></div>
+    </div>
+  </div>
+</div>
+
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
 
 <script>
 (function() {
+  /* ── Class detail data ── */
+  var classDetails = {
+    sentinel: {
+      icon: '\u2694\uFE0F',
+      name: 'Sentinel',
+      role: 'The Warrior of the Wastes',
+      flavor: 'You are your tribe\'s protector and its first line of defense. You are the hardened warrior who explores the ruins and taboo lands, always with an eye out for enemies and danger. You use your specialized knowledge of artifact weapons and armor to better protect your team and to survive the many hazards of Terra A.D. You are not trapped in a world full of your enemies \u2014 they are trapped in with you.',
+      abilities: [
+        { title:'Hit Points', text:'1d12 per level' },
+        { title:'Darwinian Luck', text:'Pure strain humans. Regenerate 1 spent Luck point every 24 hours.' },
+        { title:'AI Recognition', text:'All AIs (including sentient) get a natural +2 to AI Recognition checks for the Sentinel. Often the difference between an AI being friendly or hostile.' },
+        { title:'Artifact Mastery', text:'Natural affinity for artifact weapons & armor. Gain bonus artifact check die and add artifact die to attack rolls with artifact weapons. Initiative bonus equal to class level.' },
+        { title:'Archaic Alignment', text:'May begin as follower of The Clan of Cog or The Curious.' }
+      ],
+      table: {
+        headers: ['Lvl','Atk','Crit','Action Die','Ref','Fort','Will','Art. Chk','Art. Die'],
+        rows: [
+          ['1','+1','1d8/III','1d20','+1','+1','+1','+2','1d3'],
+          ['2','+2','1d8/III','1d20','+1','+1','+1','+3','1d4'],
+          ['3','+3','1d10/III','1d20','+1','+2','+2','+3','1d5'],
+          ['4','+4','1d10/IV','1d20','+2','+2','+2','+4','1d6'],
+          ['5','+5','1d12/V','1d20','+2','+3','+3','+5','1d7'],
+          ['6','+6','1d12/V','1d20+1d14','+3','+4','+3','+6','1d8'],
+          ['7','+7','1d14/V','1d20+1d16','+3','+4','+4','+7','1d10'],
+          ['8','+8','1d16/V','1d20+1d20','+3','+5','+4','+8','1d12'],
+          ['9','+9','2d20/V','1d20+1d20','+4','+5','+4','+9','1d14'],
+          ['10','+10','2d20/V','1d20+1d20','+4','+5','+5','+10','1d16']
+        ]
+      },
+      titles: [
+        {level:1, title:'Recruit'},
+        {level:2, title:'Trooper'},
+        {level:3, title:'Specialist'},
+        {level:4, title:'Commander'},
+        {level:5, title:'Sentinel'},
+        {level:6, title:'Sentinel Supreme'}
+      ]
+    }
+    // Other classes will be added here
+  };
+
+  /* ── Detail modal logic ── */
+  var overlay = document.getElementById('detailOverlay');
+  var modal = document.getElementById('detailModal');
+  var detailHeader = document.getElementById('detailHeader');
+  var detailBody = document.getElementById('detailBody');
+  var detailFooter = document.getElementById('detailFooter');
+  var detailClaimBtn = document.getElementById('detailClaimBtn');
+  var detailClaimedMsg = document.getElementById('detailClaimedMsg');
+  var activeDetailClass = null;
+
+  function openDetail(cls) {
+    var data = classDetails[cls];
+    if (!data) return; // no detail data yet — fall through to old behavior
+    activeDetailClass = cls;
+
+    // Set accent class on modal
+    modal.className = 'detail-modal ' + cls;
+
+    document.getElementById('detailIcon').textContent = data.icon;
+    document.getElementById('detailName').textContent = data.name;
+    document.getElementById('detailRole').textContent = data.role;
+
+    // Build body
+    var html = '<p class="flavor">' + data.flavor + '</p>';
+
+    // Abilities
+    html += '<div class="detail-section"><h4>Abilities</h4><ul>';
+    data.abilities.forEach(function(a) {
+      html += '<li><strong style="color:var(--accent)">' + a.title + ':</strong> ' + a.text + '</li>';
+    });
+    html += '</ul></div>';
+
+    // Level table
+    if (data.table) {
+      html += '<div class="detail-section"><h4>Level Progression</h4><div class="detail-table-wrap"><table class="detail-table"><thead><tr>';
+      data.table.headers.forEach(function(h) { html += '<th>' + h + '</th>'; });
+      html += '</tr></thead><tbody>';
+      data.table.rows.forEach(function(row) {
+        html += '<tr>';
+        row.forEach(function(cell) { html += '<td>' + cell + '</td>'; });
+        html += '</tr>';
+      });
+      html += '</tbody></table></div></div>';
+    }
+
+    // Titles
+    if (data.titles) {
+      html += '<div class="detail-section"><h4>Titles</h4><div class="detail-titles">';
+      data.titles.forEach(function(t) {
+        html += '<span><em>' + t.level + '.</em> ' + t.title + '</span>';
+      });
+      html += '</div></div>';
+    }
+
+    detailBody.innerHTML = html;
+
+    // Footer — claim button state
+    updateDetailFooter(cls);
+
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function updateDetailFooter(cls) {
+    var pick = picks[cls];
+    if (pick) {
+      detailClaimBtn.style.display = 'none';
+      detailClaimedMsg.style.display = 'block';
+      if (currentUser && pick.uid === currentUser.uid) {
+        detailClaimedMsg.innerHTML = '\u26A1 You claimed this class <span style="opacity:0.6;font-size:0.85em">(tap card to unclaim)</span>';
+      } else {
+        detailClaimedMsg.textContent = '\u26A1 Claimed by ' + pick.name;
+      }
+    } else {
+      detailClaimBtn.style.display = '';
+      detailClaimedMsg.style.display = 'none';
+    }
+  }
+
+  function closeDetail() {
+    overlay.classList.remove('open');
+    document.body.style.overflow = '';
+    activeDetailClass = null;
+  }
+
+  document.getElementById('detailClose').addEventListener('click', closeDetail);
+  overlay.addEventListener('click', function(e) {
+    if (e.target === overlay) closeDetail();
+  });
+
+  detailClaimBtn.addEventListener('click', function() {
+    if (!currentUser) { showStatus('Sign in first, wastelander.', 'error'); closeDetail(); return; }
+    var cls = activeDetailClass;
+    if (!cls) return;
+    if (picks[cls]) { showStatus(picks[cls].name + ' already claimed ' + cls + '!', 'error'); return; }
+    var existing = Object.entries(picks).find(function(e) { return e[1].uid === currentUser.uid; });
+    if (existing) { showStatus('You already claimed ' + existing[0] + '! Tap it to unclaim.', 'error'); closeDetail(); return; }
+    picksRef.child(cls).set({ uid:currentUser.uid, name:currentUser.displayName, photo:currentUser.photoURL||'' });
+    showStatus('You claimed ' + cls + '!', 'success');
+    closeDetail();
+  });
+
+  /* ── Firebase setup ── */
   var firebaseConfig = {
     apiKey: "AIzaSyCWmlZK3ZN8Q-AlUmyf0g2hmJIs2Z02eGU",
     authDomain: "mcccampaign-e10e5.firebaseapp.com",
@@ -312,6 +561,8 @@
         claimedByEl.textContent = '';
       }
     });
+    // Update detail modal if open
+    if (activeDetailClass) updateDetailFooter(activeDetailClass);
     renderRoster();
   }
 
@@ -336,8 +587,14 @@
   cards.forEach(function(card) {
     card.querySelector('.pick-btn').addEventListener('click', function(e) {
       e.stopPropagation();
-      if (!currentUser) { showStatus('Sign in first, wastelander.', 'error'); return; }
       var cls = card.dataset.class;
+      // If we have detail data, open the modal instead of claiming directly
+      if (classDetails[cls]) {
+        openDetail(cls);
+        return;
+      }
+      // Fallback for classes without detail data yet
+      if (!currentUser) { showStatus('Sign in first, wastelander.', 'error'); return; }
       if (picks[cls]) { showStatus(picks[cls].name + ' already claimed ' + cls + '!', 'error'); return; }
       var existing = Object.entries(picks).find(function(e) { return e[1].uid === currentUser.uid; });
       if (existing) { showStatus('You already claimed ' + existing[0] + '! Tap it to unclaim.', 'error'); return; }
