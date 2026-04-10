@@ -87,7 +87,7 @@
   .manimal   { --accent:#d07030; --accent-rgb:208,112,48; }
   .plantient { --accent:#60c040; --accent-rgb:96,192,64; }
 
-  /* Detail Modal */
+  /* Detail Modal — Card Flip */
   .detail-overlay {
     position:fixed; inset:0; z-index:1000; background:rgba(0,0,0,0.85);
     display:none; align-items:flex-start; justify-content:center;
@@ -95,35 +95,86 @@
     -webkit-overflow-scrolling:touch;
   }
   .detail-overlay.open { display:flex; }
-  .detail-modal {
-    background:#111108; border:1px solid #2a2a1a; border-top:3px solid var(--accent);
-    border-radius:8px; width:100%; max-width:520px; margin:20px 0 40px;
-    position:relative;
+  .detail-card-container {
+    width:100%; max-width:420px; margin:20px 0 40px;
+    perspective:1200px;
   }
-  .detail-header {
-    text-align:center; padding:20px 16px 14px;
+  .detail-card {
+    display:grid; width:100%; transition:transform 0.6s;
+    transform-style:preserve-3d;
+  }
+  .detail-card.flipped { transform:rotateY(180deg); }
+  .detail-card-face {
+    grid-area:1/1; border-radius:10px; border:2px solid #2a2a1a;
+    overflow:hidden; backface-visibility:hidden;
+    -webkit-backface-visibility:hidden;
+  }
+  /* FRONT — Art side */
+  .detail-front {
+    background:#0a0a06; position:relative;
+  }
+  .detail-front .card-art {
+    width:100%; display:block; border-radius:10px 10px 0 0;
+  }
+  .detail-front .card-art-overlay {
+    position:absolute; bottom:0; left:0; right:0;
+    background:linear-gradient(transparent 0%, rgba(10,10,6,0.95) 100%);
+    padding:40px 16px 16px; text-align:center;
+  }
+  .detail-front .card-art-overlay h2 {
+    font-family:'Share Tech Mono',monospace; color:var(--accent);
+    text-transform:uppercase; letter-spacing:3px; font-size:1.4em;
+    text-shadow:0 0 20px rgba(var(--accent-rgb),0.6);
+    margin-bottom:2px;
+  }
+  .detail-front .card-art-overlay .detail-role {
+    font-family:'Share Tech Mono',monospace; font-size:0.7em;
+    color:#888870; text-transform:uppercase; letter-spacing:2px;
+  }
+  .detail-front .card-border-bottom {
+    background:#0a0a06; padding:10px 16px 12px; text-align:center;
+    border-top:1px solid rgba(var(--accent-rgb),0.2);
+  }
+  .card-flip-hint {
+    font-family:'Share Tech Mono',monospace; font-size:0.65em;
+    color:#555540; text-transform:uppercase; letter-spacing:2px;
+    animation:pulse-hint 2s ease-in-out infinite;
+  }
+  @keyframes pulse-hint { 0%,100%{opacity:0.4} 50%{opacity:1} }
+  .card-flip-btn {
+    font-family:'Share Tech Mono',monospace; font-size:0.75em; text-transform:uppercase; letter-spacing:2px;
+    background:rgba(var(--accent-rgb),0.12); color:var(--accent); border:1px solid rgba(var(--accent-rgb),0.3);
+    padding:10px 24px; border-radius:4px; cursor:pointer; min-height:40px;
+    margin-top:6px;
+  }
+  .card-flip-btn:active { background:rgba(var(--accent-rgb),0.3); }
+  /* BACK — Details side */
+  .detail-back {
+    background:#111108; transform:rotateY(180deg);
+  }
+  .detail-back-scroll {
+    max-height:80vh; overflow-y:auto; -webkit-overflow-scrolling:touch;
+  }
+  .detail-back-header {
+    text-align:center; padding:16px 16px 10px;
     border-bottom:1px solid #1e1e12;
     background:linear-gradient(180deg, rgba(var(--accent-rgb),0.08) 0%, transparent 100%);
+    position:sticky; top:0; z-index:1; background-color:#111108;
   }
-  .detail-header .icon { font-size:2.8em; filter:drop-shadow(0 0 16px rgba(var(--accent-rgb),0.5)); }
-  .detail-art {
-    width:100%; max-height:300px; object-fit:cover;
-    display:block; border-bottom:1px solid #1e1e12;
-    mask-image:linear-gradient(to bottom, black 70%, transparent 100%);
-    -webkit-mask-image:linear-gradient(to bottom, black 70%, transparent 100%);
-  }
-  .detail-header h2 {
+  .detail-back-header .icon { font-size:2em; filter:drop-shadow(0 0 12px rgba(var(--accent-rgb),0.5)); }
+  .detail-back-header h2 {
     font-family:'Share Tech Mono',monospace; color:var(--accent);
-    text-transform:uppercase; letter-spacing:3px; font-size:1.3em; margin:6px 0 2px;
+    text-transform:uppercase; letter-spacing:3px; font-size:1.1em; margin:4px 0 2px;
   }
-  .detail-header .detail-role {
-    font-family:'Share Tech Mono',monospace; font-size:0.7em;
+  .detail-back-header .detail-role {
+    font-family:'Share Tech Mono',monospace; font-size:0.65em;
     color:#555540; text-transform:uppercase; letter-spacing:2px;
   }
   .detail-close {
     position:absolute; top:10px; right:12px; background:none; border:none;
     color:#555540; font-size:1.6em; cursor:pointer; padding:4px 8px;
     font-family:'Share Tech Mono',monospace; min-height:40px; min-width:40px;
+    z-index:10;
   }
   .detail-close:active { color:#e06030; }
   .detail-body { padding:16px; }
@@ -336,17 +387,38 @@
 </nav>
 
 <div class="detail-overlay" id="detailOverlay">
-  <div class="detail-modal" id="detailModal">
-    <button class="detail-close" id="detailClose">&times;</button>
-    <div class="detail-header" id="detailHeader">
-      <div class="icon" id="detailIcon"></div>
-      <h2 id="detailName"></h2>
-      <div class="detail-role" id="detailRole"></div>
-    </div>
-    <div class="detail-body" id="detailBody"></div>
-    <div class="detail-footer" id="detailFooter">
-      <button class="detail-claim-btn" id="detailClaimBtn">Claim This Class</button>
-      <div class="detail-claimed-msg" id="detailClaimedMsg"></div>
+  <div class="detail-card-container" id="detailContainer">
+    <div class="detail-card" id="detailCard">
+      <!-- FRONT: Art -->
+      <div class="detail-card-face detail-front" id="detailFront">
+        <button class="detail-close" id="detailCloseFront">&times;</button>
+        <img class="card-art" id="cardArt" src="" alt="">
+        <div class="card-art-overlay">
+          <h2 id="detailNameFront"></h2>
+          <div class="detail-role" id="detailRoleFront"></div>
+        </div>
+        <div class="card-border-bottom">
+          <div class="card-flip-hint">Tap to view details</div>
+          <button class="card-flip-btn" id="flipToBack">View Details &#x21BB;</button>
+        </div>
+      </div>
+      <!-- BACK: Details -->
+      <div class="detail-card-face detail-back" id="detailBack">
+        <div class="detail-back-scroll">
+          <button class="detail-close" id="detailCloseBack">&times;</button>
+          <div class="detail-back-header">
+            <div class="icon" id="detailIcon"></div>
+            <h2 id="detailName"></h2>
+            <div class="detail-role" id="detailRole"></div>
+            <button class="card-flip-btn" id="flipToFront" style="margin-top:8px;">View Art &#x21BB;</button>
+          </div>
+          <div class="detail-body" id="detailBody"></div>
+          <div class="detail-footer" id="detailFooter">
+            <button class="detail-claim-btn" id="detailClaimBtn">Claim This Class</button>
+            <div class="detail-claimed-msg" id="detailClaimedMsg"></div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -634,37 +706,53 @@
     }
   };
 
-  /* ── Detail modal logic ── */
+  /* ── Detail card logic ── */
   var overlay = document.getElementById('detailOverlay');
-  var modal = document.getElementById('detailModal');
-  var detailHeader = document.getElementById('detailHeader');
+  var card = document.getElementById('detailCard');
+  var container = document.getElementById('detailContainer');
   var detailBody = document.getElementById('detailBody');
-  var detailFooter = document.getElementById('detailFooter');
   var detailClaimBtn = document.getElementById('detailClaimBtn');
   var detailClaimedMsg = document.getElementById('detailClaimedMsg');
   var activeDetailClass = null;
 
+  // Flip handlers
+  document.getElementById('flipToBack').addEventListener('click', function(e) {
+    e.stopPropagation();
+    card.classList.add('flipped');
+  });
+  document.getElementById('flipToFront').addEventListener('click', function(e) {
+    e.stopPropagation();
+    card.classList.remove('flipped');
+  });
+
   function openDetail(cls) {
     var data = classDetails[cls];
-    if (!data) return; // no detail data yet — fall through to old behavior
+    if (!data) return;
     activeDetailClass = cls;
 
-    // Set accent class on modal
-    modal.className = 'detail-modal ' + cls;
-
-    // Class art image
-    var existingArt = document.getElementById('detailArt');
-    if (existingArt) existingArt.remove();
-    if (data.image) {
-      var artImg = document.createElement('img');
-      artImg.id = 'detailArt';
-      artImg.className = 'detail-art';
-      artImg.src = data.image;
-      artImg.alt = data.name;
-      artImg.style.objectPosition = data.imagePos || 'top';
-      modal.insertBefore(artImg, document.getElementById('detailHeader'));
+    // If no art, go straight to details; otherwise show art first
+    if (!data.image) {
+      card.classList.add('flipped');
+    } else {
+      card.classList.remove('flipped');
     }
 
+    // Set accent class
+    container.className = 'detail-card-container ' + cls;
+
+    // Front — art side
+    var cardArt = document.getElementById('cardArt');
+    if (data.image) {
+      cardArt.src = data.image;
+      cardArt.alt = data.name;
+      cardArt.style.display = '';
+    } else {
+      cardArt.style.display = 'none';
+    }
+    document.getElementById('detailNameFront').textContent = data.name;
+    document.getElementById('detailRoleFront').textContent = data.role;
+
+    // Back — details side
     document.getElementById('detailIcon').textContent = data.icon;
     document.getElementById('detailName').textContent = data.name;
     document.getElementById('detailRole').textContent = data.role;
@@ -732,7 +820,8 @@
     activeDetailClass = null;
   }
 
-  document.getElementById('detailClose').addEventListener('click', closeDetail);
+  document.getElementById('detailCloseFront').addEventListener('click', closeDetail);
+  document.getElementById('detailCloseBack').addEventListener('click', closeDetail);
   overlay.addEventListener('click', function(e) {
     if (e.target === overlay) closeDetail();
   });
