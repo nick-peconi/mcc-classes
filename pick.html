@@ -95,6 +95,13 @@
   }
   .detail-overlay.open { display:flex; }
 
+  /* Custom scrollbar */
+  .detail-back-scroll::-webkit-scrollbar { width:6px; }
+  .detail-back-scroll::-webkit-scrollbar-track { background:rgba(0,0,0,0.2); border-radius:3px; }
+  .detail-back-scroll::-webkit-scrollbar-thumb { background:rgba(var(--accent-rgb),0.3); border-radius:3px; }
+  .detail-back-scroll::-webkit-scrollbar-thumb:hover { background:rgba(var(--accent-rgb),0.5); }
+  .detail-back-scroll { scrollbar-width:thin; scrollbar-color:rgba(var(--accent-rgb),0.3) rgba(0,0,0,0.2); }
+
   /* Card container — tarot proportions */
   .detail-card-container {
     width:calc(100vw - 32px); max-width:360px;
@@ -307,6 +314,10 @@
     .pick-card h3 { font-size:1.1em; }
     .bottom-nav { display:none; }
     .top-nav { display:flex; }
+    .detail-card-container { max-width:480px; max-height:820px; }
+    .detail-body .flavor { font-size:0.88em; }
+    .detail-section p, .detail-section li { font-size:0.85em; }
+    .detail-table { font-size:0.65em; }
   }
 
   .top-nav {
