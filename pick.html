@@ -388,8 +388,202 @@
         {level:5, title:'Sentinel'},
         {level:6, title:'Sentinel Supreme'}
       ]
+    },
+    rover: {
+      icon: '\uD83D\uDDE1\uFE0F',
+      name: 'Rover',
+      role: 'The Scout and Scavenger',
+      flavor: 'You are the rogue, the wiley scoundrel, the explorer who always seems to turn up on the other side of a computer-locked door. You\'ve specialized in circumventing the tricks and traps of the Ancient Ones, and this makes you a valuable addition to any Seeker team setting out to plunder forbidden ruins and ancient installations.',
+      abilities: [
+        { title:'Hit Points', text:'1d6 per level' },
+        { title:'Darwinian Luck', text:'Pure strain humans and none more lucky. Regenerate 2 spent Luck points every 24 hours.' },
+        { title:'Artifacts', text:'Natural affinity for understanding artifacts of the ancients, with added bonus to Artifact checks.' },
+        { title:'Doors & Security Systems', text:'Knack for circumventing ancient technology \u2014 computer-locked doors, secured containers. Stealthy with increased chances of remaining undetected by security systems or mutants.' },
+        { title:'AI Recognition', text:'All pure strain humans (including rovers) gain a natural +2 to AI recognition rolls.' },
+        { title:'Archaic Alignment', text:'May begin as member of The Clan of Cog or The Curators.' }
+      ],
+      table: {
+        headers: ['Lvl','Atk M/R','Crit','Action Die','Ref','Fort','Will','Art. Chk','Doors/Hide'],
+        rows: [
+          ['1','+0/+1','1d10/II','1d20','+1','+1','+1','+2','+1'],
+          ['2','+1/+2','1d12/II','1d20','+1','+2','+1','+3','+3'],
+          ['3','+2/+3','1d14/II','1d20','+1','+3','+2','+4','+5'],
+          ['4','+2/+4','1d16/II','1d20','+2','+4','+2','+5','+7'],
+          ['5','+3/+5','1d20/II','1d20+1d14','+2','+5','+3','+5','+8'],
+          ['6','+4/+6','1d24/II','1d20+1d16','+2','+6','+3','+6','+9'],
+          ['7','+5/+7','1d30/II','1d20 (x2)','+3','+7','+4','+7','+10'],
+          ['8','+5/+8','1d30+2/II','1d20 (x2)','+3','+8','+4','+8','+11'],
+          ['9','+6/+9','1d30+4/II','1d20 (x2)','+3','+9','+4','+9','+12'],
+          ['10','+7/+10','1d30+6/II','1d20 (x2)','+4','+10','+5','+10','+13']
+        ]
+      },
+      titles: [
+        {level:1, title:'Tenderfoot'},
+        {level:2, title:'Trailwalker'},
+        {level:3, title:'Pathfinder'},
+        {level:4, title:'Explorer'},
+        {level:5, title:'Rover'},
+        {level:6, title:'Alpha-Rover'}
+      ]
+    },
+    healer: {
+      icon: '\uD83D\uDC89',
+      name: 'Healer',
+      role: 'The Medic',
+      flavor: 'You are a tribal healer, an expert in the medicinal value of Terra A.D.\'s manifold mutated plants, and in the self-healing powers of the sentient mind. As one knowledgable in the ways of healing, your abilities with the medical devices of the Ancient Ones is greater than any, always yielding superior results. You are a vital part of every seeker team that ventures out into the forbidden lands, as your presence helps assure a safe return.',
+      abilities: [
+        { title:'Hit Points', text:'1d8 per level' },
+        { title:'Darwinian Luck', text:'Pure strain humans. Regenerate 1 spent Luck point every 24 hours.' },
+        { title:'Artifacts', text:'Natural affinity for understanding artifacts of the ancients, with added bonus to Artifact checks.' },
+        { title:'Medical Artifacts', text:'Specialized knowledge of natural healing methods lets healers use medical artifacts with increased results, operating at one die up the dice chain in effect.' },
+        { title:'Naturopathy', text:'Healers possess an oral tradition of healing via local plants, herbs, and limited biofeedback techniques. May use these techniques 2x per day per level.' },
+        { title:'AI Recognition', text:'All pure strain humans (including healers) gain a natural +2 to AI recognition rolls.' },
+        { title:'Archaic Alignment', text:'May begin as member of The Clan of Cog or The Curators. At level 4+, may be accepted into The Holy Medicinal Order.' }
+      ],
+      table: {
+        headers: ['Lvl','Atk','Crit','Action Die','Ref','Fort','Will','Art. Chk','Healing/Day'],
+        rows: [
+          ['1','+0','1d8/III','1d20','+0','+1','+1','+2','1d3 (x2)'],
+          ['2','+1','1d8/III','1d20','+0','+1','+1','+3','1d4 (x4)'],
+          ['3','+2','1d10/III','1d20','+1','+1','+2','+4','1d5 (x6)'],
+          ['4','+2','1d10/III','1d20','+1','+2','+2','+5','1d6 (x8)'],
+          ['5','+3','1d12/III','1d20','+1','+2','+3','+5','1d7 (x10)'],
+          ['6','+4','1d12/III','1d20+1d14','+2','+2','+4','+6','1d8 (x12)'],
+          ['7','+5','1d14/III','1d20+1d16','+2','+3','+4','+7','1d10 (x14)'],
+          ['8','+5','2d14/III','1d20 (x2)','+2','+3','+5','+8','1d12 (x16)'],
+          ['9','+6','2d16/III','1d20 (x2)','+3','+3','+5','+9','1d14 (x18)'],
+          ['10','+7','2d16/III','1d20 (x2)','+3','+4','+6','+10','1d16 (x20)']
+        ]
+      },
+      titles: [
+        {level:1, title:'Intern'},
+        {level:2, title:'Medic'},
+        {level:3, title:'Curate'},
+        {level:4, title:'Doctor'},
+        {level:5, title:'Healer'},
+        {level:6, title:'High Healer'}
+      ]
+    },
+    mutant: {
+      icon: '\u2622\uFE0F',
+      name: 'Mutant',
+      role: 'Unpredictable. Dangerous. Unique.',
+      flavor: 'You are among the most bizarre of all the many sentients wandering Terra A.D. Never breeding true to form, yours are a people of infinitely variable appearance, temperament, and mutation. The mere sight of you almost always gives others pause. You have been taught to embrace this lineage, for what curses you from birth also makes you very powerful.',
+      abilities: [
+        { title:'Hit Points', text:'1d5 per level' },
+        { title:'Mutations', text:'Upon achieving 1st level, gain a random 1d3 physical mutations and 1d2 mental mutations.' },
+        { title:'Mutant Horror', text:'Being among the most bizarre appearing of mutated creatures, mutants can strike fear in their opponents, gaining an initiative bonus in combat.' },
+        { title:'Reverse Evolution', text:'Should a mutant ever lose all mutations, their genome hardens and they become a pure strain human, entering a pure human class at 1st level. Cannot gain mutations again.' },
+        { title:'Radburn', text:'Mutants exposed to radiation or other mutagens may develop \u2014 or sometimes lose \u2014 mutations.' },
+        { title:'Glowburn', text:'May elect to use glowburn when activating a mutant power to boost that mutation\'s effect.' },
+        { title:'AI Recognition', text:'Normally receive no inherent bonuses to AI recognition. If a mutant has no visible or discernible mutations (judge\'s discretion), bonus may become +1.' },
+        { title:'Archaic Alignment', text:'May begin as member of The Clan of Cog or Children of the Glow.' }
+      ],
+      table: {
+        headers: ['Lvl','Atk','Crit','Action Die','Ref','Fort','Will','Art. Chk','Horror Init'],
+        rows: [
+          ['1','+1','1d6/II','1d20','+1','+0','+1','+0','1d3'],
+          ['2','+1','1d8/II','1d20','+1','+0','+1','+1','1d3+1'],
+          ['3','+2','1d8/II','1d20','+1','+1','+2','+2','1d3+2'],
+          ['4','+2','1d10/II','1d20','+2','+1','+2','+3','1d4+2'],
+          ['5','+3','1d10/II','1d20+1d14','+2','+2','+3','+4','1d4+3'],
+          ['6','+3','1d12/II','1d20+1d16','+2','+2','+3','+5','1d5+4'],
+          ['7','+4','1d12/II','1d20 (x2)','+3','+3','+4','+6','1d5+5'],
+          ['8','+4','1d14/II','1d20 (x2)','+3','+3','+4','+7','1d6+5'],
+          ['9','+5','1d14/II','1d20 (x2)','+3','+3','+4','+8','1d6+6'],
+          ['10','+5','1d16/II','1d20 (x2)','+4','+4','+5','+9','1d7+7']
+        ]
+      },
+      titles: [
+        {level:1, title:'Misfit'},
+        {level:2, title:'Deviant'},
+        {level:3, title:'Abomination'},
+        {level:4, title:'Unhuman'},
+        {level:5, title:'Mutant'},
+        {level:6, title:'Meta-Human'}
+      ]
+    },
+    manimal: {
+      icon: '\uD83D\uDC3E',
+      name: 'Manimal',
+      role: 'Human-Animal Hybrid',
+      flavor: 'You are the inheritors of world, or so you have always been taught. The Ancient Ones, in their infinite wisdom, gifted your many races with sentience and the power to walk upright and to use tools. While the remainder of humanity struggle to recover from being struck down and brought low by the Great Disaster, you and your mutated kin have been raised up, the better to take your place as rulers the new wise rulers of Terra A.D.',
+      abilities: [
+        { title:'Hit Points', text:'1d7 per level' },
+        { title:'Mutations', text:'Upon achieving 1st level, gain 1d2 random physical and 1 random mental mutation.' },
+        { title:'Natural Attack', text:'Have a natural 1d4 bite or claw melee attack.' },
+        { title:'Pack Mentality', text:'When coordinating melee attacks on the same target, manimals gain +1 to attack for each manimal attacking a single opponent in the same combat round.' },
+        { title:'Artifacts', text:'No natural affinity for artifacts of the ancients, but do gain some bonuses with experience.' },
+        { title:'Radburn', text:'Exposed to radiation or other mutagens may develop \u2014 or sometimes lose \u2014 mutations. Losing all mutations causes devolution to base animal stock with Intelligence of 1d3.' },
+        { title:'Glowburn', text:'May elect to use glowburn when activating a mutant power.' },
+        { title:'AI Recognition', text:'Because of their animalistic appearance, manimals have a natural -4 to AI recognition rolls.' },
+        { title:'Archaic Alignment', text:'May begin as member of The Clan of Cog or The Chosen Zuu.' }
+      ],
+      table: {
+        headers: ['Lvl','Atk','Crit','Action Die','Ref','Fort','Will','Art. Chk'],
+        rows: [
+          ['1','+1','1d6/II','1d20','+1','+0','+1','+0'],
+          ['2','+1','1d8/II','1d20','+1','+0','+1','+0'],
+          ['3','+2','1d8/II','1d20','+1','+0','+1','+0'],
+          ['4','+2','1d10/II','1d20','+2','+1','+2','+1'],
+          ['5','+3','1d10/II','1d20+1d14','+2','+2','+2','+1'],
+          ['6','+3','1d12/III','1d20+1d16','+2','+2','+3','+2'],
+          ['7','+4','1d12/III','1d20 (x2)','+3','+3','+3','+3'],
+          ['8','+4','1d14/III','1d20 (x2)','+3','+3','+4','+4'],
+          ['9','+5','1d14/III','1d20 (x2)','+3','+3','+4','+5'],
+          ['10','+5','1d16/III','1d20 (x2)','+4','+4','+5','+6']
+        ]
+      },
+      titles: [
+        {level:1, title:'Omega Cub'},
+        {level:2, title:'Theta Soldier'},
+        {level:3, title:'Gamma Trooper'},
+        {level:4, title:'Beta Commander'},
+        {level:5, title:'Alpha Leader'},
+        {level:6, title:'Alpha Pack Leader'}
+      ]
+    },
+    plantient: {
+      icon: '\uD83C\uDF3F',
+      name: 'Plantient',
+      role: 'Sentient Plant Creature',
+      flavor: 'You are the stoic wanderer, the solid trunk of reason and logic that provides a needed counter-balance to the chaotic animal drives of some of your fellow seekers. You\'re also a good comrade-in-arms to have along, because your presence alone seems to mysteriously guarantee better outcomes. Your innate understanding of the delicate balance that all life must maintain in order to flourish makes you a valuable negotiator, and a wise counselor.',
+      abilities: [
+        { title:'Hit Points', text:'1d5 per level' },
+        { title:'Mutations', text:'Upon achieving 1st level, gain 1d3 random physical mutations.' },
+        { title:'Natural Attack', text:'Have a natural 1d4 thorn or spine missile attack.' },
+        { title:'Fragrance Pheromones', text:'Naturally excrete fragrances, pollen, and spores that cause most creatures to treat them favorably, even if only subconsciously. Naturally lucky and gain 2 points of Luck for every 1 point spent. May donate Luck to others.' },
+        { title:'Can\'t See the Forest for the Trees', text:'In most outdoor settings, can remain still and gain an automatic 50% chance of hiding successfully. Chance goes up by 5% for each level gained.' },
+        { title:'Artifacts', text:'General antipathy for artifacts of the ancients, gaining minor bonuses at higher levels.' },
+        { title:'Radburn', text:'Exposed to radiation or other mutagens may develop \u2014 or sometimes lose \u2014 mutations. Losing all mutations causes devolution to base non-sentient plant stock.' },
+        { title:'Glowburn', text:'May elect to use glowburn when activating a mutant power.' },
+        { title:'AI Recognition', text:'Plantients are not recognized by AIs.' },
+        { title:'Archaic Alignment', text:'May begin as member of The Clan of Cog or The Atomic Equinox, or others at the judge\'s discretion.' }
+      ],
+      table: {
+        headers: ['Lvl','Atk','Crit','Action Die','Ref','Fort','Will','Art. Chk','Hide %'],
+        rows: [
+          ['1','+0','1d10/III','1d20','+1','+0','+1','-1','50%'],
+          ['2','+1','1d12/III','1d20','+1','+0','+1','+0','55%'],
+          ['3','+2','1d14/III','1d20','+1','+1','+2','+0','60%'],
+          ['4','+2','1d16/III','1d20','+2','+1','+2','+1','65%'],
+          ['5','+3','1d20/III','1d20+1d14','+2','+2','+3','+1','70%'],
+          ['6','+4','1d24/III','1d20+1d16','+2','+2','+3','+2','75%'],
+          ['7','+5','1d30/III','1d20 (x2)','+3','+3','+4','+3','80%'],
+          ['8','+5','1d30+2/III','1d20 (x2)','+3','+3','+4','+4','85%'],
+          ['9','+6','1d30+4/III','1d20 (x2)','+3','+3','+4','+5','90%'],
+          ['10','+7','1d30+6/III','1d20 (x2)','+4','+4','+5','+6','95%']
+        ]
+      },
+      titles: [
+        {level:1, title:'Sprout'},
+        {level:2, title:'Caretaker'},
+        {level:3, title:'Greenskeeper'},
+        {level:4, title:'Cultivator'},
+        {level:5, title:'Warder'},
+        {level:6, title:'High Warder'}
+      ]
     }
-    // Other classes will be added here
   };
 
   /* ── Detail modal logic ── */
