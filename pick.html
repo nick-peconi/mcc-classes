@@ -426,6 +426,44 @@
         {level:6, title:'Alpha-Rover'}
       ]
     },
+    shaman: {
+      icon: '\uD83D\uDD2E',
+      name: 'Shaman',
+      role: 'Keeper of Ancient Knowledge',
+      flavor: 'You are among all your fellow Seekers who have the trained capacity to memorize enormous amounts of information, allowing you to access enormous power, as you are able to imprint data previously stored in the wetware programs of the lost super-science of the Ancient Ones onto your very brains \u2014 unified field equations and arcane formulae of the lost super-science of Ancient Ones, including the ability to run the wetware programs granted to you by ancient and powerful Artificial Intelligences.',
+      abilities: [
+        { title:'Hit Points', text:'1d6 per level' },
+        { title:'Darwinian Luck', text:'Pure strain humans are very lucky as a species. Shamans sacrifice much of this when taking on a Patron AI. Regenerate spent Luck at the rate of 1 point per 7 days.' },
+        { title:'Wetware Programs', text:'Shamans have been sha-men, focusing upon legend and lore and myth, associated with those demigod servants of the Ancient Ones, the Artificial Intelligences. Even without the benefit of a written language, shamans pass along to each other an oral tradition of arcane knowledge relating to these most lost technologies and certain mathematical laws of physics that will grant enormous power.' },
+        { title:'Choosing an AI Patron', text:'At 1st level, a Shaman selects an AI patron to serve. This patron will grant the shaman access to wetware programs of terrible power, including the ability to run powerful AI programs.' },
+        { title:'Artifacts', text:'Natural affinity for understanding artifacts of the ancients, with added bonus to Artifact checks.' },
+        { title:'AI Recognition', text:'All pure strain humans (including shamans) gain a natural +2 to AI recognition rolls.' },
+        { title:'Archaic Alignment', text:'May begin as member of The Clan of Cog or The Curators.' }
+      ],
+      table: {
+        headers: ['Lvl','Atk','Crit','Action Die','Ref','Fort','Will','Art. Chk','Max Prog.'],
+        rows: [
+          ['1','+0','1d6/I','1d20','+1','+1','+1','+1','1'],
+          ['2','+1','1d8/I','1d20','+1','+1','+2','+2','2'],
+          ['3','+1','1d8/I','1d20','+1','+1','+3','+3','3'],
+          ['4','+1','1d10/I','1d20','+2','+2','+4','+4','3'],
+          ['5','+2','1d10/I','1d20+1d14','+2','+2','+5','+5','4'],
+          ['6','+2','1d12/I','1d20+1d16','+2','+3','+5','+6','4'],
+          ['7','+3','1d12/I','1d20 (x2)','+3','+3','+5','+8','5'],
+          ['8','+3','2d14/I','1d20 (x2)','+3','+4','+6','+10','5'],
+          ['9','+4','2d14/I','1d20 (x3)','+3','+4','+6','+11','5'],
+          ['10','+4','2d14/I','1d20 (x3)','+4','+5','+6','+12','5']
+        ]
+      },
+      titles: [
+        {level:1, title:'Acolyte'},
+        {level:2, title:'Adept'},
+        {level:3, title:'Shaman'},
+        {level:4, title:'Seer-Shaman'},
+        {level:5, title:'High-Shaman'},
+        {level:6, title:'Shaman Supreme'}
+      ]
+    },
     healer: {
       icon: '\uD83D\uDC89',
       name: 'Healer',
