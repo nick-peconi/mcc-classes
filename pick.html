@@ -426,7 +426,6 @@
     <div class="detail-card" id="detailCard">
       <!-- FRONT: Art -->
       <div class="detail-card-face detail-front" id="detailFront">
-        <button class="detail-close" id="detailCloseFront">&times;</button>
         <div class="card-art-wrap">
           <img class="card-art" id="cardArt" src="" alt="">
           <div class="card-art-overlay">
@@ -857,7 +856,6 @@
     activeDetailClass = null;
   }
 
-  document.getElementById('detailCloseFront').addEventListener('click', closeDetail);
   document.getElementById('detailCloseBack').addEventListener('click', closeDetail);
   overlay.addEventListener('click', function(e) {
     if (e.target === overlay) closeDetail();
