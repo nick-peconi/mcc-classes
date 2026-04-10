@@ -107,7 +107,7 @@
   }
   .detail-header .icon { font-size:2.8em; filter:drop-shadow(0 0 16px rgba(var(--accent-rgb),0.5)); }
   .detail-art {
-    width:100%; max-height:300px; object-fit:cover; object-position:top;
+    width:100%; max-height:300px; object-fit:cover;
     display:block; border-bottom:1px solid #1e1e12;
     mask-image:linear-gradient(to bottom, black 70%, transparent 100%);
     -webkit-mask-image:linear-gradient(to bottom, black 70%, transparent 100%);
@@ -363,7 +363,7 @@
       icon: '\u2694\uFE0F',
       name: 'Sentinel',
       role: 'The Warrior of the Wastes',
-      image: 'images/sentinel.png',
+      image: 'images/sentinel.png', imagePos: 'top',
       flavor: 'You are your tribe\'s protector and its first line of defense. You are the hardened warrior who explores the ruins and taboo lands, always with an eye out for enemies and danger. You use your specialized knowledge of artifact weapons and armor to better protect your team and to survive the many hazards of Terra A.D. You are not trapped in a world full of your enemies \u2014 they are trapped in with you.',
       abilities: [
         { title:'Hit Points', text:'1d12 per level' },
@@ -400,7 +400,7 @@
       icon: '\uD83D\uDDE1\uFE0F',
       name: 'Rover',
       role: 'The Scout and Scavenger',
-      image: 'images/rover.png',
+      image: 'images/rover.png', imagePos: 'top',
       flavor: 'You are the rogue, the wiley scoundrel, the explorer who always seems to turn up on the other side of a computer-locked door. You\'ve specialized in circumventing the tricks and traps of the Ancient Ones, and this makes you a valuable addition to any Seeker team setting out to plunder forbidden ruins and ancient installations.',
       abilities: [
         { title:'Hit Points', text:'1d6 per level' },
@@ -438,7 +438,7 @@
       icon: '\uD83D\uDD2E',
       name: 'Shaman',
       role: 'Keeper of Ancient Knowledge',
-      image: 'images/shaman.png',
+      image: 'images/shaman.png', imagePos: 'center',
       flavor: 'You are among all your fellow Seekers who have the trained capacity to memorize enormous amounts of information, allowing you to access enormous power, as you are able to imprint data previously stored in the wetware programs of the lost super-science of the Ancient Ones onto your very brains \u2014 unified field equations and arcane formulae of the lost super-science of Ancient Ones, including the ability to run the wetware programs granted to you by ancient and powerful Artificial Intelligences.',
       abilities: [
         { title:'Hit Points', text:'1d6 per level' },
@@ -477,7 +477,7 @@
       icon: '\uD83D\uDC89',
       name: 'Healer',
       role: 'The Medic',
-      image: 'images/healer.png',
+      image: 'images/healer.png', imagePos: 'top',
       flavor: 'You are a tribal healer, an expert in the medicinal value of Terra A.D.\'s manifold mutated plants, and in the self-healing powers of the sentient mind. As one knowledgable in the ways of healing, your abilities with the medical devices of the Ancient Ones is greater than any, always yielding superior results. You are a vital part of every seeker team that ventures out into the forbidden lands, as your presence helps assure a safe return.',
       abilities: [
         { title:'Hit Points', text:'1d8 per level' },
@@ -661,6 +661,7 @@
       artImg.className = 'detail-art';
       artImg.src = data.image;
       artImg.alt = data.name;
+      artImg.style.objectPosition = data.imagePos || 'top';
       modal.insertBefore(artImg, document.getElementById('detailHeader'));
     }
 
